@@ -52,6 +52,7 @@
       backdrop-filter: saturate(180%) blur(8px);
       background: color-mix(in hsl, var(--bg) 80%, transparent);
       border-bottom: 1px solid var(--border);
+      gap: 0.5rem;
     }
     .brand {
       font-weight: 700; letter-spacing: 0.2px;
@@ -64,7 +65,7 @@
     nav a:hover { background: var(--ring); }
     nav a[aria-current="page"] { outline: 2px solid var(--ring); }
 
-    .header-row { display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 56px; }
+    .header-row { display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 58px; }
     .spacer { height: 0.25rem; }
 
     /* Sections */
@@ -1616,6 +1617,10 @@
 
     const byId = id => links.find(a => a.getAttribute('href') === '#' + id);
 
+    const opts = window.matchMedia("(max-width: 768px)").matches
+      ? { rootMargin: "-10% 0px -80% 0px", threshold: 0.01 } // mobile
+      : { rootMargin: "-10% 0px -70% 0px", threshold: 0.01 }; // desktop
+
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         const link = byId(entry.target.id);
@@ -1625,7 +1630,7 @@
           link.setAttribute('aria-current', 'page');
         }
       });
-    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0.01 });
+    }, opts);
 
     sections.forEach(sec => obs.observe(sec));
   </script>
