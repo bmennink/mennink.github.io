@@ -12,7 +12,8 @@
       --muted: #6b7280; /* gray-500 */
       --accent: #111111;
       --border: #d1d5db; /* gray-200 */
-      --highlighted: #008800;
+      --highlighted: #007700;
+      --hlink: #0000b8;
       --ring: rgba(0,0,0,0.17);
       --maxw: 56rem; /* ~896px */
     }
@@ -22,7 +23,8 @@
         --text: #d1d5db;
         --muted: #9ca3af;
         --accent: #d1d5db;
-        --highlighted: #008800;
+        --highlighted: #007700;
+        --hlink: #7aa2ff;
         --border: #1f2937;
         --ring: rgba(255,255,255,0.25);
       }
@@ -123,12 +125,10 @@
       position: static; width: auto; height: auto; padding: 0.5rem 0.75rem; border-radius: 8px; background: var(--ring);
     }
   
-    a {
+    a, .hlink {
     text-decoration: none;
-    color: #0000b8;
+    color: var(--hlink);
     }
-
-    .hlink{color:#0000b8;}
 
     .ol-list {
       list-style: decimal;
