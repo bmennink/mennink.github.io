@@ -56,7 +56,14 @@
     }
     .brand {
       font-weight: 700; letter-spacing: 0.2px;
+      display: block; /* default: visible */
     }
+    @media (max-width: 768px) {
+      .brand {
+        display: none; /* hide on mobile */
+      }
+    }
+    
     nav { display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
     nav a {
       display: inline-block; padding: 0.5rem 0.7rem; border-radius: 999px;
@@ -65,17 +72,17 @@
     nav a:hover { background: var(--ring); }
     nav a[aria-current="page"] { outline: 2px solid var(--ring); }
 
-header nav {
-  display: flex;
-  gap: 0.25rem; /* normal spacing */
-}
+    header nav {
+      display: flex;
+      gap: 0.25rem; /* normal spacing */
+    }
 
-@media (max-width: 768px) {
-  header nav {
-    gap: 0.1rem; /* tighter on mobile */
-    font-size: 0.8rem; /* slightly smaller links */
-  }
-}
+    @media (max-width: 768px) {
+      header nav {
+        gap: 0.25rem; /* tighter on mobile */
+        font-size: 0.9rem; /* slightly smaller links */
+      }
+    }
 
     .header-row { display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 58px; }
     .spacer { height: 0.25rem; }
