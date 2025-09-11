@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SHA-1 computation</title>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src='sha1.js'></script>
+    <script src='https://code.jquery.com/jquery-2.1.4.min.js'></script>
+    <style type='text/css'>
+        body {
+            background-color: #f5f5f5;
+        }
+        .content {
+            text-align: justify;
+            padding: 20px 30px 30px;
+            margin: 60px auto;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.1);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,.1);
+        }
+        .notopmargin {
+            margin-top: -30px;
+        }
+        #errors {
+            display: none;
+        }
+        textarea.form-control {
+            height: 200px;
+        }
+        textarea {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+                <div class="content">
+                    <div class='alert alert-danger' id='errors'></div>
+                    <p>
+                        This tool computes the SHA1 digest over an input block of bytes in hexadecimal notation. Spaces and newlines are removed.
+                    </p>
+                    <form>
+                        <div class="form-group">
+                            <label for="P">Input:</label>
+                            <textarea type="text" class="hex-only form-control" id="P" placeholder="00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF .."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button id='hashbtn' type="button" class="btn btn-default">
+                                <span class='glyphicon glyphicon-arrow-down'></span> Hash
+                            </button>
+                        </div>
+                        <p>
+                            <strong>Digest: </strong><span id='digest'>-</span>
+                        </p>
+                    </form>
+                </div>
+                <div class="content notopmargin">
+                    <h3>SHAttered</h3>
+                    <p>On 23 February 2017, researchers from CWI Amsterdam and Google Researchers <a href="https://shattered.io">broke SHA-1</a> in practice. By finding two messages that result in the same digest, they demonstrated that SHA-1 is not collision resistant. These messages were published in their paper <a href="https://shattered.io/static/shattered.pdf">"The first collision for full SHA-1"</a>.</p>
+
+                    <p>The message blocks must be preceded by a common prefix, <i>S:</i></p>
+
+<pre>25 50 44 46 2D 31 2E 33 0A 25 E2 E3 CF D3 0A 0A
+0A 31 20 30 20 6F 62 6A 0A 3C 3C 2F 57 69 64 74
+68 20 32 20 30 20 52 2F 48 65 69 67 68 74 20 33
+20 30 20 52 2F 54 79 70 65 20 34 20 30 20 52 2F
+53 75 62 74 79 70 65 20 35 20 30 20 52 2F 46 69
+6C 74 65 72 20 36 20 30 20 52 2F 43 6F 6C 6F 72
+53 70 61 63 65 20 37 20 30 20 52 2F 4C 65 6E 67
+74 68 20 38 20 30 20 52 2F 42 69 74 73 50 65 72
+43 6F 6D 70 6F 6E 65 6E 74 20 38 3E 3E 0A 73 74
+72 65 61 6D 0A FF D8 FF FE 00 24 53 48 41 2D 31
+20 69 73 20 64 65 61 64 21 21 21 21 21 85 2F EC
+09 23 39 75 9C 39 B1 A1 C6 3C 4C 97 E1 FF FE 01</pre>
+
+                    <p>The message blocks M and M' are</p>
+
+<pre>7F 46 DC 93 A6 B6 7E 01 3B 02 9A AA 1D B2 56 0B
+45 CA 67 D6 88 C7 F8 4B 8C 4C 79 1F E0 2B 3D F6
+14 F8 6D B1 69 09 01 C5 6B 45 C1 53 0A FE DF B7
+60 38 E9 72 72 2F E7 AD 72 8F 0E 49 04 E0 46 C2
+30 57 0F E9 D4 13 98 AB E1 2E F5 BC 94 2B E3 35
+42 A4 80 2D 98 B5 D7 0F 2A 33 2E C3 7F AC 35 14
+E7 4D DC 0F 2C C1 A8 74 CD 0C 78 30 5A 21 56 64
+61 30 97 89 60 6B D0 BF 3F 98 CD A8 04 46 29 A1</pre>
+
+                    <p>and</p>
+
+<pre>73 46 DC 91 66 B6 7E 11 8F 02 9A B6 21 B2 56 0F
+F9 CA 67 CC A8 C7 F8 5B A8 4C 79 03 0C 2B 3D E2
+18 F8 6D B3 A9 09 01 D5 DF 45 C1 4F 26 FE DF B3
+DC 38 E9 6A C2 2F E7 BD 72 8F 0E 45 BC E0 46 D2
+3C 57 0F EB 14 13 98 BB 55 2E F5 A0 A8 2B E3 31
+FE A4 80 37 B8 B5 D7 1F 0E 33 2E DF 93 AC 35 00
+EB 4D DC 0D EC C1 A8 64 79 0C 78 2C 76 21 56 60
+DD 30 97 91 D0 6B D0 AF 3F 98 CD A4 BC 46 29 B1</pre>
+
+                    <p>The message Ma of the assignment is</p>
+
+<pre>C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0
+FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF
+EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE
+C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0
+FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF
+EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE
+C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0
+FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF EE C0 FF</pre>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<script type='text/javascript'>
+$(document).ready(function() {
+    function error(s) {
+        $('#errors').html(s);
+        $('#errors').show();
+    }
+
+    function parseHexString(str) {
+        var result = [];
+        while (str.length >= 8) {
+            result.push(parseInt(str.substring(0, 8), 16));
+
+            str = str.substring(8, str.length);
+        }
+
+        return result;
+    }
+
+    function formatHex(x) {
+        return wordsToHex(x).toUpperCase().replace(/(.{2})/g,"$1 ").substr(0, 47);
+    }
+
+    // TODO use formatter.js to properly format to hexadecimals while the user is inputting
+    // TODO clean up the code below to reduce duplication
+
+    $('#hashbtn').click(function() {
+        $('#errors').hide();
+        var P = $("#P").val().replace(/ /g, '').toUpperCase();
+        $("#P").val(P.replace(/(.{2})/g,"$1 "));
+        P = P.replace(/\n/g, '');
+        if (!/^[A-F0-9]*$/.test(P)) {
+            error('The input should only contain hexadecimal characters.');
+        }
+        else {
+            var shaObj = new jsSHA("SHA-1", "HEX");
+            shaObj.update(P);
+            $("#digest").html(shaObj.getHash("HEX"));
+        }
+    });
+});
+</script>
+</body>
+</html>

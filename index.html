@@ -1,12 +1,1638 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>title</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body>
-    Hello world!
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bart Mennink</title>
+  <meta name="description" content="Bart Mennink" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #6b7280; /* gray-500 */
+      --accent: #111111;
+      --border: #d1d5db; /* gray-200 */
+      --highlighted: #008800;
+      --ring: rgba(0,0,0,0.17);
+      --maxw: 56rem; /* ~896px */
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0b0c;
+        --text: #d1d5db;
+        --muted: #9ca3af;
+        --accent: #d1d5db;
+        --highlighted: #00cc00;
+        --border: #1f2937;
+        --ring: rgba(255,255,255,0.25);
+      }
+    }
+
+    html { box-sizing: border-box; scroll-behavior: smooth; }
+    *, *::before, *::after { box-sizing: inherit; }
+    body {
+      margin: 0;
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Layout helpers */
+    .container { max-width: var(--maxw); margin-inline: auto; padding: 0 1rem; }
+    .stack { display: grid; gap: 0.75rem; }
+    .stack-lg { display: grid; gap: 1.25rem; }
+
+    /* Header / Nav */
+    header {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: saturate(180%) blur(8px);
+      background: color-mix(in hsl, var(--bg) 80%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      font-weight: 700; letter-spacing: 0.2px;
+    }
+    nav { display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
+    nav a {
+      display: inline-block; padding: 0.5rem 0.7rem; border-radius: 999px;
+      text-decoration: none; color: inherit;
+    }
+    nav a:hover { background: var(--ring); }
+    nav a[aria-current="page"] { outline: 2px solid var(--ring); }
+
+    .header-row { display: grid; grid-template-columns: 1fr auto; align-items: center; min-height: 56px; }
+    .spacer { height: 0.25rem; }
+
+    /* Sections */
+    section { padding: 4rem 0; border-bottom: 1px solid var(--border); scroll-margin-top: 72px; }
+    section:last-of-type { border-bottom: 0; padding-bottom: 6rem; }
+    h1, h2, h3 { line-height: 1.2; margin: 0 0 0.35rem 0; }
+    h1 { font-size: clamp(2.2rem, 2.8vw + 1rem, 3rem); }
+    h2 { font-size: clamp(1.7rem, 2.0vw + 0.9rem, 2.2rem); margin-bottom: 0.6rem; }
+    h3 { font-size: clamp(1.3rem, 1.4vw + 0.75rem, 1.6rem); margin-bottom: -0.6rem; font-weight: 600; }
+
+    p { margin: 0; color: var(--text); text-align: justify; }
+    .muted { color: var(--muted); }
+    .highlighted { color: var(--highlighted); }
+
+    .list { display: grid; gap: 0.75rem; }
+    .item { border: 1px solid var(--border); border-radius: 14px; padding: 0.9rem 1rem; }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 0; }
+
+    .home-grid {
+      display: grid;
+      gap: 2rem;
+      align-items: center;
+      grid-template-columns: 1fr; /* default: stack on small screens */
+    }
+
+    .home-photo img {
+      max-width: 240px;
+      width: 100%;
+      border-radius: 8px; /* rounded corners */
+      display: block;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    @media (min-width: 768px) {
+      .home-grid {
+        grid-template-columns: 240px 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .two-col {
+        display: block;
+      }
+    }
+
+    /* Accessibility */
+    .skip-link {
+      position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+    }
+    .skip-link:focus {
+      position: static; width: auto; height: auto; padding: 0.5rem 0.75rem; border-radius: 8px; background: var(--ring);
+    }
+  
+    a {
+    text-decoration: none;
+    color: #0000b8;
+    }
+
+    .hlink{color:#0000b8;}
+
+    .ol-list {
+      list-style: decimal;
+      padding-left: 1.5rem;
+      display: grid;
+      gap: 0.2rem;
+      margin-top: 0rem;
+    }
+    .ol-list li {
+      margin: 0;
+      padding: 0;
+    }
+    .ul-list {
+      padding-left: 1.5rem;
+      display: grid;
+      gap: 0.2rem;
+      margin-top: 0rem;
+    }
+    .ul-list li {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Reduce motion if user prefers */
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#home">Skip to content</a>
+
+  <header>
+    <div class="container header-row">
+      <div class="brand">&nbsp;&nbsp;Bart Mennink</div>
+      <nav aria-label="Primary">
+        <a href="#home">Home</a>
+        <a href="#cv">CV</a>
+        <a href="#pubs">Publications</a>
+        <a href="#act">Activities</a>
+        <a href="#phd">PhD</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="home" aria-labelledby="home-title">
+      <div class="container stack-lg">
+        <h1 id="home-title">Bart Mennink</h1><p></p>
+      </div>
+      <div class="container home-grid">
+        <div class="home-photo">
+          <a href=https://www.instagram.com/audreyhoubenfotografie/><img src="bartnieuw.jpg" alt="Bart Mennink" /></a>
+        </div>
+        <div class="home-text stack-lg">
+          <p>
+            I am a full professor in the <a href=https://www.maastrichtuniversity.nl/research/department-advanced-computing-sciences>Department of Applied Computing Sciences</a> at <a href=https://www.maastrichtuniversity.nl/>Maastricht University</a>. Before, I was an associate professor in the <a href=http://www.ru.nl/ds/>Digital Security Group</a> at <a href=http://www.ru.nl/english/>Radboud University Nijmegen</a>, partially funded by an <a href=http://www.nwo.nl/en>NWO Vidi</a> grant, an <a href=http://www.nwo.nl/en>NWO Veni</a> postdoctoral researcher at Radboud University, as well as an <a href=https://www.fwo.be/en>FWO</a> postdoctoral researcher at <a href=http://www.kuleuven.be/english>KU Leuven</a> in the <a href=http://www.esat.kuleuven.be/cosic/>COSIC research group</a>. I finished my PhD, entitled <a href=pubs/13thesis.pdf>Provable Security of Cryptographic Hash Functions</a>, in 2013 under supervision of Bart Preneel and Vincent Rijmen. Before, I completed my Master's thesis on <a href=pubs/09thesis.pdf>Encrypted certificate schemes and their security and privacy analysis</a> at Philips, Eindhoven, The Netherlands.<br><br>
+            My research interests include all aspects of cryptology, with main focus on symmetric cryptography (such as hash functions and authenticated encryption), provable security, cryptographic protocols, and their applications to today's society.
+          </p>
+        </div>
+      </div>
+      <div class="container stack-lg">
+        <p></p><p></p>
+        <h3>Updates</h3>
+        <ul class="ul-list">
+          <li>
+            Co-organizing <a href="https://gelrecrypt.cs.ru.nl">GelreCrypt 2025</a> in Nijmegen (November 2025) and the <a href="https://bacc.cs.ru.nl">Applied Cryptography Course</a> in Amsterdam (April 2026)
+          </li>
+          <li>
+            Spoke at <a target=_blank href=https://casa.rub.de/en/spring-school-on-symmetric-cryptography>Spring School on Symmetric Cryptography</a> and at <a target=_blank href=https://www.mn.uio.no/ifi/english/research/networks/p4c/finse-2025/>Finse Cybersecurity Winter School</a>
+          </li>
+          <li>
+            Serving in the program committee of <a target=_blank href=https://fse.iacr.org/2026/>FSE 2026</a>, <font class="hlink">CT-RSA 2026</font>, <a target=_blank href=https://eurocrypt.iacr.org/2026/>EUROCRYPT 2026</a>, and <a target=_blank href=https://acns2026.github.io/>ACNS 2026</a>
+          </li>
+        </ul>
+      </div>
+      <div class="container stack-lg">
+        <p></p><p></p>
+        <h3>E-mail</h3>
+        <ul class="ul-list">
+          <li>
+            &#98;&#97;&#114;t&#46;&#109;e&#110;n&#105;&#110;k&#64;&#109;a&#97;&#115;tr&#105;&#99;h&#116;university.n&#108;<br>
+            <a href=pgp.pub.maastrichtuniversity.txt>PGP key</a>, D67D DA5B C37E F11B 8C11 3B21 D7A3 7EC4 8649 EA27
+          </li>
+          <li>
+            &#98;&#46;&#109;e&#110;n&#105;&#110;k&#64;&#99;s.&#114;&#117;&#46;n&#108;<br>
+            <a href=pgp.pub.txt>PGP key</a>, 7239 01BC C840 B2A1 2326 86EC E00B 1294 ECFC C406
+          </li>
+        </ul>
+      </div>
+      <div class="container two-col">
+      <div class="home-text stack-lg">
+        <p></p><p></p>
+        <h3>Visiting Address</h3>
+        Paul-Henri Spaaklaan 1<br>
+        6229 EN Maastricht, The Netherlands<br>
+        Room C4.030
+      </div>
+      <div class="home-text stack-lg">
+        <p></p><p></p>
+        <h3>Postal Address</h3>
+        Department of Advanced Computing Sciences<br>
+        Maastricht University<br>
+        P.O. Box 616<br>
+        6200 MD Maastricht, The Netherlands
+      </div>
+      </div>
+    </section>
+
+    <!-- CV -->
+    <section id="cv" aria-labelledby="cv-title">
+      <div class="container stack-lg">
+        <h2 id="cv-title">CV</h2>
+        <div class="list">
+          <div class="item">
+            <div><strong>2025 - now &nbsp;&nbsp;·&nbsp;&nbsp; Full professor</strong></div>
+            <div>Maastricht University, The Netherlands</div>
+            <p class="muted">Funding: The Netherlands Organisation for Scientific Research, NWO Vidi (<a href=http://www.nwo.nl/en/>NWO</a>)</p>
+          </div>
+          <div class="item">
+            <div><strong>2022 - 2025 &nbsp;&nbsp;·&nbsp;&nbsp; Associate professor</strong></div>
+            <div>Radboud University, The Netherlands</div>
+            <p class="muted">Funding: The Netherlands Organisation for Scientific Research, NWO Vidi (<a href=http://www.nwo.nl/en/>NWO</a>)</p>
+          </div>
+          <div class="item">
+            <div><strong>2019 - 2022 &nbsp;&nbsp;·&nbsp;&nbsp; Assistant professor</strong></div>
+            <div>Radboud University, The Netherlands</div>
+            <p class="muted">Funding: The Netherlands Organisation for Scientific Research, NWO Vidi (<a href=http://www.nwo.nl/en/>NWO</a>)</p>
+          </div>
+          <div class="item">
+            <div><strong>2017 - 2019 &nbsp;&nbsp;·&nbsp;&nbsp; Postdoctoral researcher</strong></div>
+            <div>Radboud University, The Netherlands</div>
+            <p class="muted">Funding: The Netherlands Organisation for Scientific Research, NWO Veni (<a href=http://www.nwo.nl/en/>NWO</a>)</p>
+          </div>
+          <div class="item">
+            <div><strong>2013 - 2016 &nbsp;&nbsp;·&nbsp;&nbsp; Postdoctoral researcher</strong></div>
+            <div>KU Leuven, Belgium</div>
+            <p class="muted">Funding: Scientific Research Network of the Research Foundation in Flanders (<a href=http://www.fwo.be/en/>FWO</a>)</p>
+          </div>
+          <div class="item">
+            <div><strong>2009 - 2013 &nbsp;&nbsp;·&nbsp;&nbsp; PhD in Electrical Engineering</strong></div>
+            <div>KU Leuven, Belgium</div>
+            <p class="muted">Thesis: <a href=pubs/13thesis.pdf>Provable Security of Cryptographic Hash Functions</a></p>
+            <p class="muted">Promotors: prof. dr. ir. Bart Preneel and prof. dr. ir. Vincent Rijmen</p>
+            <p class="muted">Funding: Institute for the Promotion of Innovation through Science and Technology in Flanders (<font class="hlink">IWT</font>)</p>
+            <p class="muted">Summa cum laude with congratulations of the Board of Examiners (highest possible distinction)</p>
+          </div>
+          <div class="item">
+            <div><strong>2007 - 2009 &nbsp;&nbsp;·&nbsp;&nbsp; Master of Science in Mathematics</strong></div>
+            <div>TU Eindhoven, The Netherlands</div>
+            <p class="muted">Thesis: <a href=pubs/09thesis.pdf>Encrypted certificate schemes and their security and privacy analysis</a> (at Philips Research Labs)</p>
+            <p class="muted">Supervisors: dr. ir. Berry Schoenmakers and dr. Jorge Guajardo Merchan</p>
+            <p class="muted">Cum laude (highest possible distinction)</p>
+          </div>
+          <div class="item">
+            <div><strong>2004 - 2007 &nbsp;&nbsp;·&nbsp;&nbsp; Bachelor of Science in Mathematics</strong></div>
+            <div>TU Eindhoven, The Netherlands</div>
+            <p class="muted">Cum laude (highest possible distinction)</p>
+          </div>
+          <div class="item">
+            <div><strong>2004 - 2005 &nbsp;&nbsp;·&nbsp;&nbsp; Propedeuse in Mathematics and in Computer Science</strong></div>
+            <div>TU Eindhoven, The Netherlands</div>
+          </div>
+        </div>
+      </div>
+      <div class="container stack-lg">
+        <p></p><p></p>
+        <h3>Awards</h3>
+        <ul class="ul-list">
+          <li>
+            2025: <a href=https://www.ru.nl/en/about-us/events/education-awards-2024>Nominated for senior education award 2024</a> at Radboud University
+          </li><li>
+            2025: Best paper award at <i>FSE 2025</i>
+          </li><li>
+            2024: <a href=https://www.ru.nl/en/about-us/news/faculty-of-science-education-awards-for-bart-mennink-and-jelle-hilbers>Education award senior lecturer 2023</a> at Faculty of Science
+          </li><li>
+            2021: <a href=http://www.nwo.nl/en/>NWO</a> Vidi grant
+          </li><li>
+            2020: <a href=http://www.nwo.nl/en/>NWO</a> KLEIN-1 grant
+          </li><li>
+            2018: Best PC member award at <i>ASIACRYPT 2018</i>
+          </li><li>
+            2018: <a href=http://www.nwo.nl/en/>NWO</a> TOP grant (with Joan Daemen)
+          </li><li>
+            2017: Best PC member award at <i>ASIACRYPT 2017</i>
+          </li><li>
+            2016: <a href=http://www.nwo.nl/en/>NWO</a> Veni grant
+          </li><li>
+            2014: <a href=http://www.fwo.be/en/>FWO</a> postdoctoral fellowship
+          </li><li>
+            2012: Best paper award at <i>Cryptology and Network Security, CANS 2012</i>
+          </li><li>
+            2012: Best paper award at <i>AFRICACRYPT 2012</i>
+          </li><li>
+            2009: <font class="hlink">IWT</font> doctoral scholarship
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section id="pubs" aria-labelledby="pubs-title">
+      <div class="container stack-lg">
+        <h2 id="pubs-title">Publications</h2>
+        <h3>2025</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2025/1183.pdf>PA1 Security on Release of Unverified Plaintext in Encrypt-then-MAC AE Schemes</a><br />
+            Bart Mennink, Suprita Talnikar<br />
+            <i>Cryptology ePrint Archive</i>. Report 2025/1183, 27 pages (2025)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2025/963.pdf>Permutation-Based Hashing with Stronger (Second) Preimage Resistance - Application to Hash-Based Signature Schemes</a><br />
+            Siwei Sun, Shun Li, Zhiyu Zhang, Charlotte Lefevre, Bart Mennink, Zhen Qin, Dengguo Feng<br />
+            <i>Cryptology ePrint Archive</i>. Report 2025/963, 36 pages (2025)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2025/411.pdf>Security of the Ascon Authenticated Encryption Mode in the Presence of Quantum Adversaries</a><br />
+            Nathalie Lang, Stefan Lucks, Bart Mennink, Suprita Talnikar<br />
+            <i>Cryptology ePrint Archive</i>. Report 2025/411, 31 pages (2025)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2025/270.pdf>A Decomposition Approach for Evaluating Security of Masking</a><br />
+            Vahid Jahandideh, Bart Mennink, Lejla Batina<br />
+            <i>Cryptology ePrint Archive</i>. Report 2025/270, 34 pages (2025)
+          </li>
+          <li>
+            <font class="hlink">Minimized PRFs From Public Permutations</font><br />
+            Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i>, 2025(3). To appear (2025)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2025/179.pdf>Probing Secure Composability Without Fresh Randomness: Theory and Application to Ascon</a><br />
+            Vahid Jahandideh, Bart Mennink, Lejla Batina<br />
+            <i>IACR Transactions on Cryptographic Hardware and Embedded Systems</i> 2025(4). To appear (2025)
+          </li>
+          <li>
+            <font class="hlink">Statistical Evaluation of Entropy Accumulation in Linux</font><br />
+            Alexandre Bouez, Joan Daemen, Bart Mennink<br />
+            <i>OSVS 2025</i>. To appear (2025)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2024/084.pdf>Efficient Instances of Docked Double Decker With AES, and Application to Authenticated Encryption</a><br />
+            Christoph Dobraunig, Krystian Matusiewicz, Bart Mennink, Alexander Tereschenko<br />
+            <i>EUROCRYPT 2025 (I)</i>. LNCS, vol. 15601, pp. 62-92. Springer (2025)
+            <a href=https://doi.org/10.1007/978-3-031-91107-1_3><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2025/eurocrypt/eurocrypt2025/315/315_slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=WPa8JvBsYFU#t=18m56s><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2024/1928.pdf>Generic Security of GCM-SST</a><br />
+            Akiko Inoue, Ashwin Jha, Bart Mennink, Kazuhiko Minematsu<br />
+            <i>Applied Cryptography and Network Security, ACNS 2025 (II)</i>. LNCS, vol. 15826, pp. 342-369. Springer (2025)
+            <a href=https://doi.org/10.1007/978-3-031-95764-2_14><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2024/1969.pdf>SoK: Security of the Ascon Modes</a><br />
+            Charlotte Lefevre, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i>, 2025(1), pp. 138-210 (2025)
+            <a href=https://doi.org/10.46586/tosc.v2025.i1.138-210><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2025/fse/fse2025/1_30/1_30_slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/12073/11914>To Pad or Not to Pad? Padding-Free Arithmetization-Oriented Sponges</a><br />
+            Charlotte Lefevre, Mario Marhuenda Beltrán, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i>, 2025(1), pp. 97-137 (2025)
+            <a href=https://doi.org/10.46586/tosc.v2025.i1.97-137><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2025/fse/fse2025/1_52/1_52_slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/12072/11913>Keying Merkle-Damgård at the Suffix</a><br />
+            Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i>, 2025(1), pp. 70-96 (2025)
+            <a href=https://doi.org/10.46586/tosc.v2025.i1.70-96><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2025/fse/fse2025/1_1/1_1_slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>2024</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2024/557.pdf>Permutation-Based Hash Chains with Application to Password Hashing</a><br />
+            Charlotte Lefevre, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2024(4), pp. 249-286 (2024). <font class="highlighted"><b>Best paper award!</b></font>
+            <a href=https://doi.org/10.46586/tosc.v2024.i4.249-286><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2025/fse/fse2025/4_11/4_11_slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2022/1342.pdf>Block Cipher Doubling for a Post-Quantum World</a><br />
+            Ritam Bhaumik, André Chailloux, Paul Frixons, Bart Mennink, María Naya-Plasencia<br />
+            <i>IACR Communications in Cryptology</i>, 1(3), pp. 4 (2024)
+            <a href=https://doi.org/10.62056/av4fvua5v><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://drops.dagstuhl.de/entities/document/10.4230/DagRep.14.1.72>Symmetric Cryptography (Dagstuhl Seminar 24041)</a><br />
+            Christof Beierle, Bart Mennink, María Naya-Plasencia, Yu Sasaki, Rachelle Heim Boissier<br />
+            <i>Dagstuhl Reports</i>, 14(1), pp. 72-89 (2024)
+            <a href=https://doi.org/10.4230/DagRep.14.1.72><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://tches.iacr.org/index.php/TCHES/article/view/11806/11311>An Algebraic Approach for Evaluating Random Probing Security With Application to AES</a><br />
+            Vahid Jahandideh, Bart Mennink, Lejla Batina<br />
+            <i>IACR Transactions on Cryptographic Hardware and Embedded Systems</i> 2024(4), pp. 657-689 (2024)
+            <a href=https://doi.org/10.46586/tches.v2024.i4.657-689><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2024/tches/tches2024/4_106/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2023/796.pdf>Generic Security of the Ascon Mode: On the Power of Key Blinding</a><br />
+            Charlotte Lefevre, Bart Mennink<br />
+            <i>Selected Areas in Cryptography, SAC 2024 (II)</i>. LNCS, vol. 15517, pp. 3-32. Springer (2024) 
+            <a href=https://doi.org/10.1007/978-3-031-82841-6_1><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://sacworkshop.org/SAC24/slides/LefevreMennink_talk.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/11413/10911>Tightening Leakage Resilience of the Suffix Keyed Sponge</a><br />
+            Henk Berendsen, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2024(1), pp. 459-496 (2024)
+            <a href=https://doi.org/10.46586/tosc.v2024.i1.459-496><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2024/fse/fse2024/2024_1_4/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=Qc8AQFHfBig><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/11402/10900>Permutation-Based Hashing Beyond the Birthday Bound</a><br />
+            Charlotte Lefevre, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2024(1), pp. 71-113 (2024)
+            <a href=https://doi.org/10.46586/tosc.v2024.i1.71-113><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2024/fse/fse2024/2024_1_12/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=fC0-aeQQEHo#t=22m54s><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://link.springer.com/content/pdf/10.1007/s00145-024-09492-8.pdf>The COLM Authenticated Encryption Scheme</a><br />
+            Elena Andreeva, Andrey Bogdanov, Nilanjan Datta, Atul Luykx, Bart Mennink, Mridul Nandi, Elmar Tischhauser, Kan Yasuda<br />
+            <i>Journal of Cryptology</i>, 37(2), pp. 15 (2024)
+            <a href=https://doi.org/10.1007/s00145-024-09492-8><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2023/924.pdf>Generalized Initialization of the Duplex Construction</a><br />
+            Christoph Dobraunig, Bart Mennink<br />
+            <i>Applied Cryptography and Network Security, ACNS 2024 (II)</i>. LNCS, vol. 14584, pp. 460-484. Springer (2024)
+            <a href=https://doi.org/10.1007/978-3-031-54773-7_18><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+        </ol>
+        <h3>2023</h3>
+        <ol class="ol-list">
+        <li class="firstli">
+            <font class="hlink">Encryption and Security of Counter Mode</font><br />
+            Bart Mennink<br />
+            <i>Symmetric Cryptography 1 - Design and Security Proofs (Boura, Naya-Plasencia)</i>. Book chapter, pp. 147-157. Wiley (2023)
+          </li>
+          <li>
+            <font class="hlink">Modeling Security</font><br />
+            Bart Mennink<br />
+            <i>Symmetric Cryptography 1 - Design and Security Proofs (Boura, Naya-Plasencia)</i>. Book chapter, pp. 137-146. Wiley (2023)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2023/520.pdf>Generic Security of the SAFE API and Its Applications</a><br />
+            Dmitry Khovratovich, Mario Marhuenda Beltrán, Bart Mennink<br />
+            <i>ASIACRYPT 2023 (VIII)</i>. LNCS, vol. 14445, pp. 301-327. Springer (2023)
+            <a href=https://doi.org/10.1007/978-981-99-8742-9_10><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2023/asiacrypt/asiacrypt2023/312/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=TFJ4Dblu6wk#t=46m03s><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <font class="hlink">Information Security Conference, ISC 2023, Proceedings</font><br />
+            Elias Athanasopoulos, Bart Mennink<br />
+            LNCS, vol. 14411. Springer (2023)
+            <a href=https://doi.org/10.1007/978-3-031-49187-0><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/23tifs.pdf>Secure Distributed Modular Exponentiation: Systematic Analysis and New Results</a><br />
+            Bart Mennink<br />
+            <i>IEEE Transactions on Information Forensics Security</i> 18, pp. 4188-4197 (2023)
+            <a href=https://doi.org/10.1109/TIFS.2023.3293396><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2023/840.pdf>Revisiting the Indifferentiability of the Sum of Permutations</a><br />
+            Aldo Gunsing, Ritam Bhaumik, Ashwin Jha, Bart Mennink, Yaobin Shen<br />
+            <i>CRYPTO 2023 (III)</i>. LNCS, vol. 14083, pp. 628-660. Springer (2023)
+            <a href=https://doi.org/10.1007/978-3-031-38548-3_21><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2023/crypto/crypto2023/99/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=57z0kUcu1sk#t=26m48s><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/10979/10412>EliMAC: Speeding Up LightMAC by around 20%</a><br />
+            Christoph Dobraunig, Bart Mennink, Samuel Neves<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2023(2), pp. 69-93 (2023)
+            <a href=https://doi.org/10.46586/tosc.v2023.i2.69-93><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2024/fse/fse2024/2023_2_27/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=hWi8lw1Qc3I><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2022/1340.pdf>Understanding the Duplex and Its Security</a><br />
+            Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2023(2), pp. 1-46 (2023)
+            <a href=https://doi.org/10.46586/tosc.v2023.i2.1-46><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2024/fse/fse2024/2023_2_2/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=fC0-aeQQEHo><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/10301/9746>Preface to Volume 2023, Issue 1</a><br />
+            Christina Boura, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2023(1), pp. 1-4 (2023)
+            <a href=https://doi.org/10.46586/tosc.v2023.i1.1-4><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2023/522.pdf>SAFE: Sponge API for Field Elements</a><br />
+            Jean-Philippe Aumasson, Dmitry Khovratovich, Bart Mennink, Porçu Quine<br />
+            <i>Cryptology ePrint Archive</i>. Report 2023/522, 9 pages (2023)
+          </li>
+        </ol>
+        <h3>2022</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2022/508.pdf>Security of Truncated Permutation Without Initial Value</a><br />
+            Lorenzo Grassi, Bart Mennink<br />
+            <i>ASIACRYPT 2022 (II)</i>. LNCS, vol. 13792, pp. 620-650. Springer (2022)
+            <a href=https://doi.org/10.1007/978-3-031-22966-4_21><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2022/asiacrypt/asiacrypt2022/42/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=OUG4i_MxJTU><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2020/200.pdf>Leakage and Tamper Resilient Permutation-Based Cryptography</a><br />
+            Christoph Dobraunig, Bart Mennink, Robert Primas<br />
+            <i>ACM CCS 2022</i>. pp. 859-873. ACM (2022)
+            <a href=https://doi.org/10.1145/3548606.3560635><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://drops.dagstuhl.de/opus/volltexte/2022/17277/pdf/dagrep_v012_i004_p001_22141.pdf>Symmetric Cryptography (Dagstuhl Seminar 22141)</a><br />
+            Nils Gregor Leander, Bart Mennink, María Naya-Plasencia, Yu Sasaki, Eran Lambooij<br />
+            <i>Dagstuhl Reports</i>, 12(4), pp. 1-12 (2022)
+            <a href=https://doi.org/10.4230/DagRep.12.4.1><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2022/734.pdf>Tight Preimage Resistance of the Sponge Construction</a><br />
+            Charlotte Lefevre, Bart Mennink<br />
+            <i>CRYPTO 2022 (IV)</i>. LNCS, vol. 13510, pp. 185-204. Springer (2022)
+            <a href=https://doi.org/10.1007/978-3-031-15985-5_7><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2022/crypto/crypto2022/37/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=X58bwUnqFuE><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/9524/9061>Preface to Volume 2022, Issue 1</a><br />
+            Itai Dinur, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2022(1), pp. 1-4 (2022)
+            <a href=https://doi.org/10.46586/tosc.v2022.i1.1-4><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2020/1583.pdf>HERMES: Scalable, Secure, and Privacy-Enhancing Vehicle Access System</a><br />
+            Iraklis Symeonidis, Dragos Rotaru, Mustafa A. Mustafa, Bart Mennink, Bart Preneel, Panos Papadimitratos<br />
+            <i>IEEE Internet of Things Journal</i>, 9(1), pp. 129-151 (2022)
+            <a href=https://doi.org/10.1109/JIOT.2021.3094930><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+        </ol>
+        <h3>2021</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2021/1696.pdf>Categorization of Faulty Nonce Misuse Resistant Message Authentication</a><br />
+            Yu Long Chen, Bart Mennink, Bart Preneel<br />
+            <i>ASIACRYPT 2021 (III)</i>. LNCS, vol. 13092, pp. 520-550. Springer (2021)
+            <a href=https://doi.org/10.1007/978-3-030-92078-4_18><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=M1eKApSDSRQ><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=pubs/21sac.pdf>Multi-User Security of the Elephant v2 Authenticated Encryption Mode</a><br />
+            Tim Beyne, Yu Long Chen, Christoph Dobraunig, Bart Mennink<br />
+            <i>Selected Areas in Cryptography, SAC 2021</i>. LNCS, vol. 13203, pp. 155-178. Springer (2022) 
+            <a href=https://doi.org/10.1007/978-3-030-99277-4_8><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/sac21.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=b9xsamrtWmY><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=pubs/21tit.pdf>Systematic Security Analysis of Stream Encryption With Key Erasure</a><br />
+            Yu Long Chen, Atul Luykx, Bart Mennink, Bart Preneel<br />
+            <i>IEEE Transactions on Information Theory</i> 67(11), pp. 7518-7534 (2021)
+            <a href=https://doi.org/10.1109/TIT.2021.3109302><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2021/402.pdf>Leakage Resilient Value Comparison With Application to Message Authentication</a><br />
+            Christoph Dobraunig, Bart Mennink<br />
+            <i>EUROCRYPT 2021 (II)</i>. LNCS, vol. 12697, pp. 377-407. Springer (2021)
+            <a href=https://doi.org/10.1007/978-3-030-77886-6_13><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/ec21.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=t9JC9tYV1DA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://link.springer.com/content/pdf/10.1007/s10623-021-00850-2.pdf>On the Resilience of Even-Mansour to Invariant Permutations</a><br />
+            Bart Mennink, Samuel Neves<br />
+            <i>Designs, Codes and Cryptography</i> 89(5), pp. 859-893 (2021)
+            <a href=https://doi.org/10.1007/s10623-021-00850-2><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+        </ol>
+        <h3>2020</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8754/8352>Tightness of the Suffix Keyed Sponge Bound</a><br />
+            Christoph Dobraunig, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2020(4), pp. 195-212 (2020)
+            <a href=https://doi.org/10.46586/tosc.v2020.i4.195-212><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse22.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=JMakzsmUv8Q><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2020/1082.pdf>Beyond Birthday Bound Secure Fresh Rekeying: Application to Authenticated Encryption</a><br />
+            Bart Mennink<br />
+            <i>ASIACRYPT 2020 (I)</i>. LNCS, vol. 12491, pp. 630-661. Springer (2020)
+            <a href=http://dx.doi.org/10.1007/978-3-030-64837-4_21><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://iacr.org/submit/files/slides/2020/asiacrypt/ac2020/140/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://youtube.com/watch?v=va2o0g0ap1Y><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8706/8298>Errata to Sound Hashing Modes of Arbitrary Functions, Permutations, and Block Ciphers</a><br />
+            Aldo Gunsing, Joan Daemen, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2020(3), pp. 362-366 (2020)
+            <a href=https://doi.org/10.13154/tosc.v2020.i3.362-366><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/20crypto.pdf>The Summation-Truncation Hybrid: Reusing Discarded Bits for Free</a><br />
+            Aldo Gunsing, Bart Mennink<br />
+            <i>CRYPTO 2020 (I)</i>. LNCS, vol. 12170, pp. 187-217. Springer (2020)
+            <a href=https://doi.org/10.1007/978-3-030-56784-2_7><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=YCUVqQVt00w><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://drops.dagstuhl.de/opus/volltexte/2020/12402/pdf/dagrep_v010_i001_p130_20041.pdf>Symmetric Cryptography (Dagstuhl Seminar 20041)</a><br />
+            Nils Gregor Leander, Bart Mennink, Kaisa Nyberg, Kan Yasuda<br />
+            <i>Dagstuhl Reports</i>, 10(1), pp. 130-143 (2020)
+            <a href=https://doi.org/10.4230/DagRep.10.1.130><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2020/108.pdf>Practical Forgeries for ORANGE</a><br />
+            Christoph Dobraunig, Florian Mendel, Bart Mennink<br />
+            <i>Information Processing Letters</i>, 159-160, pp. 105961 (2020)
+            <a href=https://doi.org/10.1016/j.ipl.2020.105961><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8625/8191>ISAP v2.0</a><br />
+            Christoph Dobraunig, Maria Eichlseder, Stefan Mangard, Florian Mendel, Bart Mennink, Robert Primas, Thomas Unterluggauer<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> Special Issue on Designs for the NIST Lightweight Standardisation Process, pp. 390-416 (2020)
+            <a href=https://doi.org/10.13154/tosc.v2020.iS1.390-416><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=XyIQz1qJ_ws><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8616/8182>Dumbo, Jumbo, and Delirium: Parallel Authenticated Encryption for the Lightweight Circus</a><br />
+            Tim Beyne, Yu Long Chen, Christoph Dobraunig, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> Special Issue on Designs for the NIST Lightweight Standardisation Process, pp. 5-30 (2020)
+            <a href=https://doi.org/10.13154/tosc.v2020.iS1.5-30><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse20a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=s5sgjkzRUVQ><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=pubs/20pqc.pdf>Collapseability of Tree Hashes</a><br />
+            Aldo Gunsing, Bart Mennink<br />
+            <i>Conference on Post-Quantum Cryptography, PQCrypto 2020</i>. LNCS, vol. 10346, pp. 367-383. Springer (2020)
+            <a href=https://doi.org/10.1007/978-3-030-44223-1_28><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=cC23W2Dr-1A><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+        </ol>
+        <h3>2019</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2019/573.pdf>Security of the Suffix Keyed Sponge</a><br />
+            Christoph Dobraunig, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2019(4), pp. 223-248 (2019)
+            <a href=https://doi.org/10.13154/tosc.v2019.i4.223-248><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse20b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=RJpG3E5M4FY><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8456/8025>Release of Unverified Plaintext: Tight Unified Model and Application to ANYDAE</a><br />
+            Donghoon Chang, Nilanjan Datta, Avijit Dutta, Bart Mennink, Mridul Nandi, Somitra Sanadhya, Ferdinand Sibleyras<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2019(4), pp. 119-146 (2019)
+            <a href=https://doi.org/10.13154/tosc.v2019.i4.119-146><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=EUIcXgwpmGw><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8451/8021>Deck-Based Wide Block Cipher Modes and an Exposition of the Blinded Keyed Hashing Model</a><br />
+            Aldo Gunsing, Joan Daemen, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2019(4), pp. 1-22 (2019)
+            <a href=https://doi.org/10.13154/tosc.v2019.i4.1-22><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=W3jqbgLWFHI><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2019/225.pdf>Leakage Resilience of the Duplex Construction</a><br />
+            Christoph Dobraunig, Bart Mennink<br />
+            <i>ASIACRYPT 2019 (III)</i>. LNCS, vol. 11923, pp. 225-255. Springer (2019)
+            <a href=https://doi.org/10.1007/978-3-030-34618-8_8><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/ac19.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2019/554.pdf>How to Build Pseudorandom Functions From Public Random Permutations</a><br />
+            Yu Long Chen, Eran Lambooij, Bart Mennink<br />
+            <i>CRYPTO 2019 (I)</i>. LNCS, vol. 10403, pp. 556-583. Springer (2019)
+            <a href=https://doi.org/10.1007/978-3-030-26948-7_10><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=fMRlqmbO2W8><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=pubs/19joc.pdf>Beyond Conventional Security in Sponge-Based Authenticated Encryption Modes</a><br />
+            Philipp Jovanovic, Atul Luykx, Bart Mennink, Yu Sasaki, Kan Yasuda<br />
+            <i>Journal of Cryptology</i>, 32(3), pp. 895-940 (2019)
+            <a href=http://doi.org/10.1007/s00145-018-9299-7><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/19rsa.pdf>Linking Stam's Bounds With Generalized Truncation</a><br />
+            Bart Mennink<br />
+            <i>Topics in Cryptology, CT-RSA 2019</i>. LNCS, vol. 11405, pp. 313-329. Springer (2019)
+            <a href=https://doi.org/10.1007/978-3-030-12612-4_16><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+        </ol>
+        <h3>2018</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=pubs/18fsenew.pdf>Sound Hashing Modes of Arbitrary Functions, Permutations, and Block Ciphers</a><br />
+            Joan Daemen, Bart Mennink, Gilles Van Assche<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2018(4), pp. 197-228 (2018)
+            <a href=https://doi.org/10.13154/tosc.v2018.i4.197-228><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://fse.iacr.org/2019/files/slides/fse2019_slides-4-4.pdf><i class="fas fa-desktop" title="Slides"></i></a><br />
+            (This pdf is the <i>updated version</i> of the paper, fixing an error in the proof (see Section 1.3 of this version). Please refer to this version.)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2018/449.pdf>Key Prediction Security of Keyed Sponges</a><br />
+            Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2018(4), pp. 128-149 (2018)
+            <a href=https://doi.org/10.13154/tosc.v2018.i4.128-149><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse19.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2018/783.pdf>Short Variable Length Domain Extenders With Beyond Birthday Bound Security</a><br />
+            Yu Long Chen, Bart Mennink, Mridul Nandi<br />
+            <i>ASIACRYPT 2018 (I)</i>. LNCS, vol. 11272, pp. 244-274. Springer (2018)
+            <a href=https://doi.org/10.1007/978-3-030-03326-2_9><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2018/434.pdf>Towards Tight Security of Cascaded LRW2</a><br />
+            Bart Mennink<br />
+            <i>Theory of Cryptography Conference, TCC 2018</i>. LNCS, vol. 11240, pp. 192-222. Springer (2018)
+            <a href=https://doi.org/10.1007/978-3-030-03810-6_8><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/tcc18.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/18cans.pdf>The Relation Between CENC and NEMO</a><br />
+            Bart Mennink<br />
+            <i>Cryptology and Network Security, CANS 2018</i>. LNCS, vol. 11124, pp. 177-189. Springer (2018)
+            <a href=https://doi.org/10.1007/978-3-030-00434-7_9><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <font class="hlink">Privacy-Preserving Distributed Access Control for Medical Data</font><br />
+            Christian Maulany, Majid Nateghizad, Bart Mennink, Zekeriya Erkin<br />
+            <i>International Joint Conference on e-Business and Telecommunications, ICETE 2018 (II)</i>. pp. 488-497. SciTePress (2018)
+            <a href=https://doi.org/10.5220/0006841404880497><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/18dcc.pdf>Connecting Tweakable and Multi-Key Blockcipher Security</a><br />
+            Jooyoung Lee, Atul Luykx, Bart Mennink, Kazuhiko Minematsu<br />
+            <i>Designs, Codes and Cryptography</i> 86(3), pp. 623-640 (2018)
+            <a href=http://doi.org/10.1007/s10623-017-0347-3><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2018/204.pdf>Short Non-Malleable Codes from Related-Key Secure Block Ciphers</a><br />
+            Serge Fehr, Pierre Karpman, Bart Mennink<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2018(1), pp. 336-352 (2018)
+            <a href=https://doi.org/10.13154/tosc.v2018.i1.336-352><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://mega.nz/#F!Xb4xmCYL!tGofVwkZmEJqs-NVHlTUKQ><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>2017</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2017/498.pdf>Full-State Keyed Duplex With Built-In Multi-User Support</a><br />
+            Joan Daemen, Bart Mennink, Gilles Van Assche<br />
+            <i>ASIACRYPT 2017 (II)</i>. LNCS, vol. 10625, pp. 606-637. Springer (2017)
+            <a href=https://doi.org/10.1007/978-3-319-70697-9_21><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/asia17.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/435.pdf>Analyzing Multi-Key Security Degradation</a><br />
+            Atul Luykx, Bart Mennink, Kenneth G. Paterson<br />
+            <i>ASIACRYPT 2017 (II)</i>. LNCS, vol. 10625, pp. 575-605. Springer (2017)
+            <a href=https://doi.org/10.1007/978-3-319-70697-9_20><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/841.pdf>Efficient Length Doubling from Tweakable Block Ciphers</a><br />
+            Yu Long Chen, Atul Luykx, Bart Mennink, Bart Preneel<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2017(3), pp. 253-270 (2017)
+            <a href=https://doi.org/10.13154/tosc.v2017.i3.253-270><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://mega.nz/#F!Xb4xmCYL!tGofVwkZmEJqs-NVHlTUKQ><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/812.pdf>Optimal PRFs from Blockcipher Designs</a><br />
+            Bart Mennink, Samuel Neves<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2017(3), pp. 228-252 (2017)
+            <a href=https://doi.org/10.13154/tosc.v2017.i3.228-252><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://mega.nz/#F!Xb4xmCYL!tGofVwkZmEJqs-NVHlTUKQ><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/naw5-2017-18-3-190.pdf>De verjaardagsparadox in de cryptografie</a><br />
+            Bart Mennink<br />
+            <i>Nieuw Archief voor Wiskunde</i> 5/18(3), pp. 190-194 (2017)
+            <a href=http://www.nieuwarchief.nl/serie5/toonnummer.php?deel=18&nummer=3&taal=0><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/naw5-2017-18-3-155.pdf>Wiskunde in de cryptografie (Redactioneel)</a><br />
+            Bart Mennink, Marc Stevens<br />
+            <i>Nieuw Archief voor Wiskunde</i> 5/18(3), pp. 155-155 (2017)
+            <a href=http://www.nieuwarchief.nl/serie5/toonnummer.php?deel=18&nummer=3&taal=0><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/039.pdf>SePCAR: A Secure and Privacy-Enhancing Protocol for Car Access Provision</a><br />
+            Iraklis Symeonidis, Abdelrahaman Aly, Mustafa A. Mustafa, Bart Mennink, Siemen Dhooghe, Bart Preneel<br />
+            <i>European Symposium on Research in Computer Security, ESORICS 2017 (II)</i>. LNCS, vol. 10493, pp. 475-493. Springer (2017)
+            <a href=https://doi.org/10.1007/978-3-319-66399-9_26><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/473.pdf>Encrypted Davies-Meyer and Its Dual: Towards Optimal Security Using Mirror Theory</a><br />
+            Bart Mennink, Samuel Neves<br />
+            <i>CRYPTO 2017 (III)</i>. LNCS, vol. 10403, pp. 556-583. Springer (2017)
+            <a href=https://doi.org/10.1007/978-3-319-63697-9_19><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/crypto17b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=MvJ95FxIvdk><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/474.pdf>Insuperability of the Standard Versus Ideal Model Gap for Tweakable Blockcipher Security</a><br />
+            Bart Mennink<br />
+            <i>CRYPTO 2017 (II)</i>. LNCS, vol. 10402, pp. 708-732. Springer (2017)
+            <a href=https://doi.org/10.1007/978-3-319-63715-0_24><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/crypto17a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=_4Djup9DmUE><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/431.pdf>Understanding RUP Integrity of COLM</a><br />
+            Nilanjan Datta, Atul Luykx, Bart Mennink, Mridul Nandi<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2017(2), pp. 143-161 (2017)
+            <a href=https://doi.org/10.13154/tosc.v2017.i2.143-161><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://mega.nz/#F!Xb4xmCYL!tGofVwkZmEJqs-NVHlTUKQ><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2017/356.pdf>XOR of PRPs in a Quantum World</a><br />
+            Bart Mennink, Alan Szepieniec<br />
+            <i>Conference on Post-Quantum Cryptography, PQCrypto 2017</i>. LNCS, vol. 10346, pp. 367-383. Springer (2017)
+            <a href=https://doi.org/10.1007/978-3-319-59879-6_21><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/pqc17.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/17dcc.pdf>Optimal Collision Security in Double Block Length Hashing with Single Length Key</a><br />
+            Bart Mennink<br />
+            <i>Designs, Codes and Cryptography</i> 83(2), pp. 357-406 (2017)
+            <a href=http://dx.doi.org/10.1007/s10623-016-0227-2><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/17rsa.pdf>Weak Keys for AEZ, and the External Key Padding Attack</a><br />
+            Bart Mennink<br />
+            <i>Topics in Cryptology, CT-RSA 2017</i>. LNCS, vol. 10159, pp. 223-237. Springer (2017)
+            <a href=http://dx.doi.org/10.1007/978-3-319-52153-4_13><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+        </ol>
+        <h3>2016</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2016/827.pdf>Security Analysis of BLAKE2's Modes of Operation</a><br />
+            Atul Luykx, Bart Mennink, Samuel Neves<br />
+            <i>IACR Transactions on Symmetric Cryptology</i> 2016(1), pp. 158-176 (2016)
+            <a href=https://doi.org/10.13154/tosc.v2016.i1.158-176><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse17.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2016/1087.pdf>CENC is Optimally Secure</a><br />
+            Tetsu Iwata, Bart Mennink, Damian Vizár<br />
+            <i>Cryptology ePrint Archive</i>. Report 2016/1087, 5 pages (2016)
+          </li>
+          <li>
+            <a href=pubs/16cans.pdf>Improving the Sphinx Mix Network</a><br />
+            Filipe Beato, Kimmo Halunen, Bart Mennink<br />
+            <i>Cryptology and Network Security, CANS 2016</i>. LNCS, vol. 10052, pp. 681-691. Springer (2016)
+            <a href=http://dx.doi.org/10.1007/978-3-319-48965-0_46><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/16iwsec.pdf>Recipient Privacy in Online Social Networks</a><br />
+            Filipe Beato, Kimmo Halunen, Bart Mennink<br />
+            <i>International Workshop on Security, IWSEC 2016</i>. LNCS, vol. 9836, pp. 254-264. Springer (2016)
+            <a href=http://dx.doi.org/10.1007/978-3-319-44524-3_15><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2016/534.pdf>Damaging, Simplifying, and Salvaging p-OMD</a><br />
+            Tomer Ashur, Bart Mennink<br />
+            <i>Information Security Conference, ISC 2016</i>. LNCS, vol. 9866, pp. 73-92. Springer (2016)
+            <a href=http://dx.doi.org/10.1007/978-3-319-45871-7_6><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2015/476.pdf>XPX: Generalized Tweakable Even-Mansour with Improved Security Guarantees</a><br />
+            Bart Mennink<br />
+            <i>CRYPTO 2016 (I)</i>. LNCS, vol. 9814, pp. 64-94. Springer (2016)
+            <a href=http://dx.doi.org/10.1007/978-3-662-53018-4_3><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/crypto16.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=Np8OYlOsChY><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=pubs/16ijis.pdf>Efficient Parallelizable Hashing Using Small Non-Compressing Primitives</a><br />
+            Bart Mennink, Bart Preneel<br />
+            <i>International Journal of Information Security</i> 15(3), pp. 285-300 (2016)
+            <a href=http://dx.doi.org/10.1007/s10207-015-0288-7><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2015/999.pdf>Improved Masking for Tweakable Blockciphers with Applications to Authenticated Encryption</a><br />
+            Robert Granger, Philipp Jovanovic, Bart Mennink, Samuel Neves<br />
+            <i>EUROCRYPT 2016 (I)</i>. LNCS, vol. 9665, pp. 263-293. Springer (2016)
+            <a href=http://dx.doi.org/10.1007/978-3-662-49890-3_11><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/dagstuhl16.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=TpyrWMzXBWA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+        </ol>
+        <h3>2015</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2015/541.pdf>Security of Full-State Keyed Sponge and Duplex: Applications to Authenticated Encryption</a><br />
+            Bart Mennink, Reza Reyhanitabar, Damian Vizár<br />
+            <i>ASIACRYPT 2015 (II)</i>. LNCS, vol. 9453, pp. 465-489. Springer (2015)
+            <a href=http://dx.doi.org/10.1007/978-3-662-48800-3_19><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2015/909.pdf>On the Impact of Known-Key Attacks on Hash Functions</a><br />
+            Bart Mennink, Bart Preneel<br />
+            <i>ASIACRYPT 2015 (II)</i>. LNCS, vol. 9453, pp. 59-84. Springer (2015)
+            <a href=http://dx.doi.org/10.1007/978-3-662-48800-3_3><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/asia15.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/15jmc.pdf>Two-Permutation-Based Hashing with Binary Mixing</a><br />
+            Atul Luykx, Bart Mennink, Bart Preneel, Laura Winnen<br />
+            <i>Journal of Mathematical Cryptology</i> 9(3), pp. 139-150 (2015)
+            <a href=http://dx.doi.org/10.1515/jmc-2015-0015><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/15dcc.pdf>Open Problems in Hash Function Security</a><br />
+            Elena Andreeva, Bart Mennink, Bart Preneel<br />
+            <i>Designs, Codes and Cryptography</i> 77(2), pp. 611-631 (2015)
+            <a href=http://dx.doi.org/10.1007/s10623-015-0096-0><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/15sac.pdf>Forgery and Subkey Recovery on CAESAR candidate iFeed</a><br />
+            Willem Schroé, Bart Mennink, Elena Andreeva, Bart Preneel<br />
+            <i>Selected Areas in Cryptography, SAC 2015</i>. LNCS, vol. 9566, pp. 197-204. Springer (2016)
+            <a href=http://dx.doi.org/10.1007/978-3-319-31301-6_11><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/15acns.pdf>On the XOR of Multiple Random Permutations</a><br />
+            Bart Mennink, Bart Preneel<br />
+            <i>Applied Cryptography and Network Security, ACNS 2015</i>. LNCS, vol. 9092, pp. 619-634. Springer (2015)
+            <a href=http://dx.doi.org/10.1007/978-3-319-28166-7_30><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/acns15.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2015/363.pdf>Optimally Secure Tweakable Blockciphers</a><br />
+            Bart Mennink<br />
+            <i>Fast Software Encryption, FSE 2015</i>. LNCS, vol. 9054, pp. 428-448. Springer (2015)
+            <a href=http://dx.doi.org/10.1007/978-3-662-48116-5_21><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse15b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=uZ07M4b_OMw><i class="fab fa-youtube" title="Youtube video"></i></a><br />
+            (This pdf is the <i>updated version</i> of the paper, with a slightly adjusted description of the scheme to fix an oversight in the proof. Please refer to this version.)
+          </li>
+          <li>
+            <a href=pubs/15fse1.pdf>Security of Keyed Sponge Constructions Using a Modular Proof Approach</a><br />
+            Elena Andreeva, Joan Daemen, Bart Mennink, Gilles Van Assche<br />
+            <i>Fast Software Encryption, FSE 2015</i>. LNCS, vol. 9054, pp. 364-384. Springer (2015)
+            <a href=http://dx.doi.org/10.1007/978-3-662-48116-5_18><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fse15a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=guEAEjXjZCA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2015/175.pdf>Trivial Nonce-Misusing Attack on Pure OMD</a><br />
+            Tomer Ashur, Bart Mennink<br />
+            <i>Cryptology ePrint Archive</i>. Report 2015/175, 3 pages (2015)
+          </li>
+        </ol>
+        <h3>2014</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2014/144.pdf>How to Securely Release Unverified Plaintext in Authenticated Encryption</a><br />
+            Elena Andreeva, Andrey Bogdanov, Atul Luykx, Bart Mennink, Nicky Mouha, Kan Yasuda<br />
+            <i>ASIACRYPT 2014 (I)</i>. LNCS, vol. 8873, pp. 105-125. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-662-45611-8_6><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://des.cse.nsysu.edu.tw/asiacrypt2014/doc/3-2_How_to_release_unverified_plaintext_in_authenticated_encryption.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2014/373.pdf>Beyond 2^{c/2} Security in Sponge-Based Authenticated Encryption Modes</a><br />
+            Philipp Jovanovic, Atul Luykx, Bart Mennink<br />
+            <i>ASIACRYPT 2014 (I)</i>. LNCS, vol. 8873, pp. 85-104. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-662-45611-8_5><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://des.cse.nsysu.edu.tw/asiacrypt2014/doc/3-1_Beyond_2c2_security_in_sponge_based_authenticated_encryption_modes.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/14cans.pdf>Breaking and Fixing Cryptophia's Short Combiner</a><br />
+            Bart Mennink, Bart Preneel<br />
+            <i>Cryptology and Network Security, CANS 2014</i>. LNCS, vol. 8813, pp. 50-63. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-319-12280-9_4><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/cans14.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/14biosig3.pdf>When a Bloom Filter is a Doom Filter: Security Assessment of a Novel Iris Biometric Template Protection System</a><br />
+            Jens Hermans, Bart Mennink, Roel Peeters<br />
+            <i>Biometrics Special Interest Group, BIOSIG 2014</i>. LNI, vol. P-230, pp. 75-86. Gesellschaft für Informatik (2014)
+            <a href=http://subs.emis.de/LNI/Proceedings/Proceedings230/article21.html><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/14biosig2.pdf>Shattering the Glass Maze</a><br />
+            Jens Hermans, Roel Peeters, Bart Mennink<br />
+            <i>Biometrics Special Interest Group, BIOSIG 2014</i>. LNI, vol. P-230, pp. 63-74. Gesellschaft für Informatik (2014)
+            <a href=http://subs.emis.de/LNI/Proceedings/Proceedings230/article20.html><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/14biosig1.pdf>Speedup for European ePassport Authentication</a><br />
+            Roel Peeters, Jens Hermans, Bart Mennink<br />
+            <i>Biometrics Special Interest Group, BIOSIG 2014</i>. LNI, vol. P-230, pp. 51-62. Gesellschaft für Informatik (2014)
+            <a href=http://subs.emis.de/LNI/Proceedings/Proceedings230/article17.html><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2012/113.pdf>On the Collision and Preimage Security of MDC-4 in the Ideal Cipher Model</a><br />
+            Bart Mennink<br />
+            <i>Designs, Codes and Cryptography</i> 73(1), pp. 121-150 (2014)
+            <a href=http://dx.doi.org/10.1007/s10623-013-9813-8><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/14crypto.pdf>The Security of Multiple Encryption in the Ideal Cipher Model</a><br />
+            Yuanxi Dai, Jooyoung Lee, Bart Mennink, John P. Steinberger<br />
+            <i>CRYPTO 2014 (I)</i>. LNCS, vol. 8616, pp. 20-38. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-662-44371-2_2><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=rDbFd49tvqc><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2014/386.pdf>Chaskey: An Efficient MAC Algorithm for 32-bit Microcontrollers</a><br />
+            Nicky Mouha, Bart Mennink, Anthony Van Herrewege, Dai Watanabe, Bart Preneel, Ingrid Verbauwhede<br />
+            <i>Selected Areas in Cryptography, SAC 2014</i>. LNCS, vol. 8781, pp. 306-323. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-319-13051-4_19><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://mouha.be/wp-content/uploads/chaskey_sac.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/14fse2.pdf>COBRA: A Parallelizable Authenticated Online Cipher Without Block Cipher Inverse</a><br />
+            Elena Andreeva, Atul Luykx, Bart Mennink, Kan Yasuda<br />
+            <i>Fast Software Encryption, FSE 2014</i>. LNCS, vol. 8540, pp. 187-204. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-662-46706-0_10><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://fse2014.isg.rhul.ac.uk/slides/slides-04_3.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2013/791.pdf>APE: Authenticated Permutation-Based Encryption for Lightweight Cryptography</a><br />
+            Elena Andreeva, Begül Bilgin, Andrey Bogdanov, Atul Luykx, Bart Mennink, Nicky Mouha, Kan Yasuda<br />
+            <i>Fast Software Encryption, FSE 2014</i>. LNCS, vol. 8540, pp. 168-186. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-662-46706-0_9><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://fse2014.isg.rhul.ac.uk/slides/slides-04_2.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2014/016.pdf>Triple and Quadruple Encryption: Bridging the Gaps</a><br />
+            Bart Mennink, Bart Preneel<br />
+            <i>Cryptology ePrint Archive</i>. Report 2014/016, 16 pages (2014)
+            <a href=slides/dagstuhl14.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>2013</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=pubs/13imacc.pdf>Indifferentiability of Double Length Compression Functions</a><br />
+            Bart Mennink<br />
+            <i>IMA Cryptography and Coding 2013</i>. LNCS, vol. 8308, pp. 232-251. Springer (2013)
+            <a href=http://dx.doi.org/10.1007/978-3-642-45239-0_14><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/imacc13.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2013/790.pdf>Parallelizable and Authenticated Online Ciphers</a><br />
+            Elena Andreeva, Andrey Bogdanov, Atul Luykx, Bart Mennink, Elmar W. Tischhauser, Kan Yasuda<br />
+            <i>ASIACRYPT 2013 (I)</i>. LNCS, vol. 8269, pp. 424-443. Springer (2013)
+            <a href=http://dx.doi.org/10.1007/978-3-642-42033-7_22><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://www.iacr.org/conferences/asiacrypt2013/slides/22.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2013/061.pdf>On the Indifferentiability of Key-Alternating Ciphers</a><br />
+            Elena Andreeva, Andrey Bogdanov, Yevgeniy Dodis, Bart Mennink, John P. Steinberger<br />
+            <i>CRYPTO 2013 (I)</i>. LNCS, vol. 8042, pp. 531-550. Springer (2013)
+            <a href=http://dx.doi.org/10.1007/978-3-642-40041-4_29><i class="fas fa-link" title="DOI"></i></a>
+            <a href=https://www.youtube.com/watch?v=JRXzfukDPOQ><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=pubs/13thesis.pdf>Provable Security of Cryptographic Hash Functions</a><br />
+            Bart Mennink<br />
+            PhD thesis, <i>KU Leuven</i>, Bart Preneel, Vincent Rijmen (promotors), xvi+238 pages (2013)
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2015/222.pdf>Towards Understanding the Known-Key Security of Block Ciphers</a><br />
+            Elena Andreeva, Andrey Bogdanov, Bart Mennink<br />
+            <i>Fast Software Encryption, FSE 2013</i>. LNCS, vol. 8424, pp. 348-366. Springer (2014)
+            <a href=http://dx.doi.org/10.1007/978-3-662-43933-3_18><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://christinaboura.files.wordpress.com/2019/11/d.sym_.11updated.pdf>D.SYM.11: Final Hash Functions Status Report</a><br />
+            Christina Boura, Bart Mennink, María Naya-Plasencia, Christian Rechberger<br />
+            <i>ICT-2007-216676, European Network of Excellence in Cryptology II, technical report</i> (2013)
+          </li>
+        </ol>
+        <h3>2012</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://eprint.iacr.org/2012/644.pdf>Impossibility Results for Indifferentiability with Resets</a><br />
+            Atul Luykx, Elena Andreeva, Bart Mennink, Bart Preneel<br />
+            <i>Cryptology ePrint Archive</i>. Report 2012/644, 13 pages (2012)
+          </li>
+          <li>
+            <a href=pubs/12cans.pdf>A Simple Key-Recovery Attack on McOE-X</a><br />
+            Florian Mendel, Bart Mennink, Vincent Rijmen, Elmar W. Tischhauser<br />
+            <i>Cryptology and Network Security, CANS 2012</i>. LNCS, vol. 7712, pp. 23-31. Springer (2012). <font class="highlighted"><b>Best paper award!</b></font>
+            <a href=http://dx.doi.org/10.1007/978-3-642-35404-5_3><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/12asiacrypt.pdf>Optimal Collision Security in Double Block Length Hashing with Single Length Key</a><br />
+            Bart Mennink<br />
+            <i>ASIACRYPT 2012</i>. LNCS, vol. 7658, pp. 526-543. Springer (2012)
+            <a href=http://dx.doi.org/10.1007/978-3-642-34961-4_32><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/asia12.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2011/532.pdf>Hash Functions Based on Three Permutations: A Generic Security Analysis</a><br />
+            Bart Mennink, Bart Preneel<br />
+            <i>CRYPTO 2012</i>. LNCS, vol. 7417, pp. 330-347. Springer (2012)
+            <a href=http://dx.doi.org/10.1007/978-3-642-32009-5_20><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/crypto12.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            <a href=https://www.youtube.com/watch?v=xzgqu0AvTwA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2011/620.pdf>Provable Security of BLAKE with Non-Ideal Compression Function</a><br />
+            <a href=slides/sac12.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+            Elena Andreeva, Atul Luykx, Bart Mennink<br />
+            <i>Selected Areas in Cryptography, SAC 2012</i>. LNCS, vol. 7707, pp. 322-339. Springer (2012)
+            <a href=http://dx.doi.org/10.1007/978-3-642-35999-6_21><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/12africacrypt.pdf>Security Analysis and Comparison of the SHA-3 Finalists BLAKE, Grøstl, JH, Keccak, and Skein</a><br />
+            Elena Andreeva, Bart Mennink, Bart Preneel,  Marjan &#352;krobot<br />
+            <i>AFRICACRYPT 2012</i>. LNCS, vol. 7374, pp. 287-305. Springer (2012) <font class="highlighted"><b>Best paper award!</b></font>
+            <a href=http://dx.doi.org/10.1007/978-3-642-31410-0_18><i class="fas fa-link" title="DOI"></i></a>
+            <a href=http://www.aui.ma/africacrypt2012/images/africacrypt2012/security%20analysis%20of%20the%203rd%20round-sha3.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2011/028.pdf>The Parazoa Family: Generalizing the Sponge Hash Functions</a><br />
+            Elena Andreeva, Bart Mennink, Bart Preneel<br />
+            <i>International Journal of Information Security</i> 11(3), pp. 149-165 (2012)
+            <a href=http://dx.doi.org/10.1007/s10207-012-0157-6><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/parazoa11.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2012/147.pdf>On Security Arguments of the Second Round SHA-3 Candidates</a><br />
+            Elena Andreeva, Andrey Bogdanov, Bart Mennink, Bart Preneel, Christian Rechberger<br />
+            <i>International Journal of Information Security</i> 11(2), pp. 103-120 (2012)
+            <a href=http://dx.doi.org/10.1007/s10207-012-0156-7><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/11ipl.pdf>Increasing the Flexibility of the Herding Attack</a><br />
+            Bart Mennink<br />
+            <i>Information Processing Letters</i> 112(3), pp. 98-105 (2012)
+            <a href=http://dx.doi.org/10.1016/j.ipl.2011.10.014><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+        </ol>
+        <h3>2011</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=pubs/11sac.pdf>Provable Chosen-Target-Forced-Midfix Preimage Resistance</a><br />
+            Elena Andreeva, Bart Mennink<br />
+            <i>Selected Areas in Cryptography, SAC 2011</i>. LNCS, vol. 7118, pp. 37-54. Springer (2011)
+            <a href=http://dx.doi.org/10.1007/978-3-642-28496-0_3><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/sac11.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>2010</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=pubs/10cans.pdf>Anonymous Credential Schemes with Encrypted Attributes</a><br />
+            Jorge Guajardo, Bart Mennink, Berry Schoenmakers<br />
+            <i>Cryptology and Network Security, CANS 2010</i>. LNCS, vol. 6467, pp. 314-333. Springer (2010)
+            <a href=http://dx.doi.org/10.1007/978-3-642-17619-7_22><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/cans10.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/10jips.pdf>Security Properties of Domain Extenders for Cryptographic Hash Functions</a><br />
+            Elena Andreeva, Bart Mennink, Bart Preneel<br />
+            <i>Journal of Information Processing Systems</i> 6(4), pp. 453-480 (2010)
+            <a href=http://jips-k.org/q.jips?cp=pp&pn=141><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=pubs/10isc2.pdf>On Side-Channel Resistant Block Cipher Usage</a><br />
+            Jorge Guajardo, Bart Mennink<br />
+            <i>Information Security Conference, ISC 2010</i>. LNCS, vol. 6531, pp. 254-268. Springer (2010)
+            <a href=http://dx.doi.org/10.1007/978-3-642-18178-8_22><i class="fas fa-link" title="DOI"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2010/381.pdf>Security Reductions of the Second Round SHA-3 Candidates</a><br />
+            Elena Andreeva, Bart Mennink, Bart Preneel<br />
+            <i>Information Security Conference, ISC 2010</i>. LNCS, vol. 6531, pp. 39-53. Springer (2010)
+            <a href=http://dx.doi.org/10.1007/978-3-642-18178-8_5><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/isc10sha.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=https://eprint.iacr.org/2010/298.pdf>On the Indifferentiability of the Grøstl Hash Function</a><br />
+            Elena Andreeva, Bart Mennink, Bart Preneel<br />
+            <i>Security and Cryptography for Networks, SCN 2010</i>. LNCS, vol. 6280, pp. 88-105. Springer (2010)
+            <a href=http://dx.doi.org/10.1007/978-3-642-15317-4_7><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/scn10.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+          <li>
+            <a href=pubs/10fc.pdf>Modulo Reduction for Paillier Encryptions and Application to Secure Statistical Analysis (extended abstract)</a><br />
+            Jorge Guajardo, Bart Mennink, Berry Schoenmakers<br />
+            <i>Financial Cryptography and Data Security, FC 2010</i>. LNCS, vol. 6052, pp. 375-382. Springer (2010)
+            <a href=http://dx.doi.org/10.1007/978-3-642-14577-3_32><i class="fas fa-link" title="DOI"></i></a>
+            <a href=slides/fc10.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>2009</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=pubs/09thesis.pdf>Encrypted certificate schemes and their security and privacy analysis</a><br />
+            Bart Mennink<br />
+            Master's thesis, <i>TU Eindhoven</i>, Jorge Guajardo, Berry Schoenmakers (promotors), xii+103 pages (2009)
+          </li>
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ACTIVITIES -->
+    <section id="act" aria-labelledby="activities-title">
+      <div class="container stack-lg">
+        <h2 id="activities-title">Activities</h2>
+        <h3>Selected Invited Talks</h3>
+        <ol class="ol-list">
+          <li>
+            <font class="hlink">Understanding the Duplex and Its Security</font>.
+            <i>Spring School on Symmetric Cryptography 2025</i>. Rome, Italy <a href=slides/springschool25b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Security of Encryption Modes</font>.
+            <i>Spring School on Symmetric Cryptography 2025</i>. Rome, Italy <a href=slides/springschool25a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Security of Encryption Modes and an Exposition of Proof Techniques</font>.
+            <i>Workshop on Coding and Cryptography 2024</i>. Perugia, Italy <a href=slides/wcc24.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Security of Permutation-Based Modes and Its Application to Ascon</font>.
+            <i>NIST Lightweight Cryptography Competition Workshop 2023</i>. Online <a href=slides/nist23.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.nist.gov/news-events/events/2023/06/lightweight-cryptography-workshop-2023><i class="fab fa-youtube" title="Youtube video"></i>(select Day2_Part1)</a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2022/1340.pdf>Understanding the Duplex and Its Security</a>.
+            <i>Permutation-Based Crypto 2023</i>. Lyon, France <a href=slides/pbc23.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Tweakable Blockciphers and Beyond Birthday Bound Security</font>.
+            <i>Asian Workshop on Symmetric Key Cryptography 2018</i>. Kolkata, India <a href=slides/ask18.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Beyond Birthday-Bound Security</font>.
+            <i>COST Training School on Symmetric Cryptography and Blockchain 2018</i>. Torremolinos, Spain <a href=slides/torremolinos18b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Security of Authenticated Encryption Modes</font>.
+            <i>COST Training School on Symmetric Cryptography and Blockchain 2018</i>. Torremolinos, Spain <a href=slides/torremolinos18a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Beyond Birthday-Bound Security</font>.
+            <i>Summer School on Real-World Crypto and Privacy 2017</i>. &#352;ibenik, Croatia <a href=slides/croatia17b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Introduction to Tweakable Blockciphers</font>.
+            <i>Summer School on Real-World Crypto and Privacy 2017</i>. &#352;ibenik, Croatia <a href=slides/croatia17a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2015/999.pdf>Improved Masking for Tweakable Blockciphers with Applications to Authenticated Encryption</a>.
+            Dagstuhl 2016. Wadern, Germany <a href=slides/dagstuhl16.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Tweakable Blockciphers: Theory and Application</font>.
+            <i>IACR School on Design and Security of Cryptographic Algorithms and Devices 2015</i>. Sardinia, Italy <a href=slides/sardinia15b.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <font class="hlink">Introduction to Provable Security</font>.
+            <i>IACR School on Design and Security of Cryptographic Algorithms and Devices 2015</i>. Sardinia, Italy <a href=slides/sardinia15a.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>Selected Conference Talks</h3>
+        <ol class="ol-list">
+          <li>
+            <a href=https://csrc.nist.gov/csrc/media/Events/2023/third-workshop-on-block-cipher-modes-of-operation/documents/accepted-papers/Deck%20Based%20Wide%20Block%20Cipher%20Modes.pdf>Deck-Based Wide Block Cipher Modes</a>.
+            <i>NIST Workshop on Block Cipher Modes of Operation 2023</i>. Gaithersburg, MD, USA <a href=https://csrc.nist.gov/csrc/media/Presentations/2023/deck-based-wide-block-cipher-modes/images-media/sess-3-mennink-bcm-workshop-2023.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.nist.gov/video/third-nist-workshop-block-cipher-modes-operation-day-1><i class="fab fa-youtube" title="Youtube video"></i>(from 2:57:00)</a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2021/402.pdf>Leakage Resilient Value Comparison With Application to Message Authentication</a>.
+            <i>EUROCRYPT 2021</i>. Virtual <a href=slides/ec21.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=t9JC9tYV1DA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2020/1082.pdf>Beyond Birthday Bound Secure Fresh Rekeying: Application to Authenticated Encryption</a>.
+            <i>ASIACRYPT 2020</i>. Virtual <a href=https://iacr.org/submit/files/slides/2020/asiacrypt/ac2020/140/slides.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://youtube.com/watch?v=va2o0g0ap1Y><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2019/573.pdf>Security of the Suffix Keyed Sponge</a>.
+            <i>FSE 2020</i>. Virtual <a href=slides/fse20b.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=RJpG3E5M4FY><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://tosc.iacr.org/index.php/ToSC/article/view/8616/8182>Dumbo, Jumbo, and Delirium: Parallel Authenticated Encryption for the Lightweight Circus</a>
+            <i>FSE 2020</i>. Virtual <a href=slides/fse20a.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=s5sgjkzRUVQ><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2019/225.pdf>Leakage Resilience of the Duplex Construction</a>.
+            <i>ASIACRYPT 2019</i>. Kobe, Japan <a href=slides/ac19.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2019/documents/papers/dumbo-jumbo-delirium-lwc2019.pdf>Dumbo, Jumbo, and Delirium: Parallel Authenticated Encryption for the Lightweight Circus</a>.
+            <i>NIST Lightweight Cryptography Competition Workshop 2019</i>. Gaithersburg, MD, USA <a href=slides/nist19a.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=d_QtscORjAc><i class="fab fa-youtube" title="Youtube video"></i>(from 0:38:00)</a>
+          </li><li>
+            <a href=https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2019/documents/papers/leakage-resilience-isap-mode-lwc2019.pdf>Leakage Resilience of the ISAP Mode: A Vulgarized Summary</a>.
+            <i>NIST Lightweight Cryptography Competition Workshop 2019</i>. Gaithersburg, MD, USA <a href=slides/nist19b.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=d_QtscORjAc><i class="fab fa-youtube" title="Youtube video"></i>(from 5:09:00)</a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2018/449.pdf>Key Prediction Security of Keyed Sponges</a>.
+            <i>FSE 2019</i>. Paris, France <a href=slides/fse19.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2018/434.pdf>Towards Tight Security of Cascaded LRW2</a>.
+            <i>TCC 2018</i>. Panaji, India <a href=slides/tcc18.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2017/498.pdf>Full-State Keyed Duplex With Built-In Multi-User Support</a>.
+            <i>ASIACRYPT 2017</i>. Hong Kong, China <a href=slides/asia17.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2017/473.pdf>Encrypted Davies-Meyer and Its Dual: Towards Optimal Security Using Mirror Theory</a>.
+            <i>CRYPTO 2017</i>. Santa Barbara, CA, USA <a href=slides/crypto17b.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=MvJ95FxIvdk><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2017/474.pdf>Insuperability of the Standard Versus Ideal Model Gap for Tweakable Blockcipher Security</a>.
+            <i>CRYPTO 2017</i>. Santa Barbara, CA, USA <a href=slides/crypto17a.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=_4Djup9DmUE><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2017/356.pdf>XOR of PRPs in a Quantum World</a>.
+            <i>Conference on Post-Quantum Cryptography, PQCrypto 2017</i>. Utrecht, The Netherlands <a href=slides/pqc17.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2016/827.pdf>Security Analysis of BLAKE2\'s Modes of Operation</a>.
+            <i>FSE 2017</i>. Tokyo, Japan <a href=slides/fse17.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2015/476.pdf>XPX: Generalized Tweakable Even-Mansour with Improved Security Guarantees</a>.
+            <i>CRYPTO 2016</i>. Santa Barbara, CA, USA <a href=slides/crypto16.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=Np8OYlOsChY><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2015/909.pdf>On the Impact of Known-Key Attacks on Permutation-Based Hashing</a>.
+            <i>ASIACRYPT 2015</i>. Auckland, New Zealand <a href=slides/asia15.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=pubs/15acns.pdf>On the XOR of Multiple Random Permutations</a>.
+            <i>Applied Cryptography and Network Security, ACNS 2015</i>. New York City, NY, USA <a href=slides/acns15.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2015/363.pdf>Optimally Secure Tweakable Blockciphers</a>.
+            <i>FSE 2015</i>. Istanbul, Turkey <a href=slides/fse15b.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=uZ07M4b_OMw><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=pubs/15fse1.pdf>Security of Keyed Sponge Constructions Using a Modular Proof Approach</a>.
+            <i>FSE 2015</i>. Istanbul, Turkey <a href=slides/fse15a.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=guEAEjXjZCA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=pubs/14cans.pdf>Breaking and Fixing Cryptophia\'s Short Combiner</a>.
+            <i>Cryptology and Network Security, CANS 2014</i>. Heraklion, Greece <a href=slides/cans14.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2014/373.pdf>Beyond 2^{c/2} Security in Sponge-Based Authenticated Encryption Modes</a>.
+            <i>Directions in Authenticated Ciphers 2014</i>. Santa Barbara, CA, USA <a href=slides/diac14.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=pubs/13imacc.pdf>Indifferentiability of Double Length Compression Functions</a>.
+            <i>IMA Cryptography and Coding 2013</i>. Oxford, UK <a href=slides/imacc13.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=pubs/12asiacrypt.pdf>Optimal Collision Security in Double Block Length Hashing with Single Length Key</a>.
+            <i>ASIACRYPT 2012</i>. Beijing, China <a href=slides/asia12.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2011/532.pdf>Hash Functions Based on Three Permutations: A Generic Security Analysis</a>.
+            <i>CRYPTO 2012</i>. Santa Barbara, CA, USA <a href=slides/crypto12.pdf><i class="fas fa-desktop" title="Slides"></i></a> <a href=https://www.youtube.com/watch?v=xzgqu0AvTwA><i class="fab fa-youtube" title="Youtube video"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2011/620.pdf>Provable Security of BLAKE with Non-Ideal Compression Function</a>.
+            <i>Selected Areas in Cryptography, SAC 2012</i>. Windsor, Ontario, Canada <a href=slides/sac12.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=pubs/11sac.pdf>Provable Chosen-Target-Forced-Midfix Preimage Resistance</a>.
+            <i>Selected Areas in Cryptography, SAC 2011</i>. Toronto, Ontario, Canada <a href=slides/sac11.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2011/028.pdf>The Parazoa Family: Generalizing the Sponge Hash Functions</a>.
+            <i>ECRYPT II Hash Workshop 2011</i>. Tallinn, Estonia <a href=slides/parazoa11.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=pubs/10cans.pdf>Anonymous Credential Schemes with Encrypted Attributes</a>.
+            <i>Cryptology and Network Security, CANS 2010</i>. Kuala Lumpur, Malaysia <a href=slides/cans10.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li><li>
+            <a href=https://eprint.iacr.org/2010/381.pdf>Security Reductions of the Second Round SHA-3 Candidates</a>.
+            <i>Information Security Conference, ISC 2010</i>. Boca Raton, FL, USA <a href=slides/isc10sha.pdf><i class="fas fa-desktop" title="Slides"></i></a>
+          </li>
+        </ol>
+        <h3>Steering Committees</h3>
+        <ul class="ul-list">
+          <li>
+            FSE since 2021
+          </li><li>
+            ISC 2023-2024
+          </li><li>
+            SAC since 2024
+          </li>
+        </ul>
+        <h3>Program Chair / (Co-)Editor-in-Chief</h3>
+        <ul class="ul-list">
+          <li>
+            FSE 2022, 2023
+          </li><li>
+            ToSC 2021/22, 2022/23
+          </li><li>
+            ISC 2023
+          </li><li>
+            IET Information Security (deputy) since 2023
+          </li>
+        </ul>
+        <h3>Program Committees</h3>
+        <ul class="ul-list">
+          <li>
+            ASIACRYPT 2015, 2017, 2018, 2022, 2025
+          </li><li>
+            CRYPTO 2022, 2023, 2024, 2025
+          </li><li>
+            EUROCRYPT 2017, 2018, 2019, 2020, 2021, 2024, 2026
+          </li><li>
+            CHES 2019, 2020
+          </li><li>
+            FSE 2016, 2017, 2018, 2019, 2020, 2024, 2025, 2026
+          </li><li>
+            ACISP 2020
+          </li><li>
+            ACM CCS 2023
+          </li><li>
+            ACNS 2018, 2026
+          </li><li>
+            ArcticCrypt 2016, 2025
+          </li><li>
+            CT-RSA 2023, 2026
+          </li><li>
+            Euro S&P 2019
+          </li><li>
+            ICMC 2018, 2019
+          </li><li>
+            ICT.Open 2025
+          </li><li>
+            Indocrypt 2018, 2020
+          </li><li>
+            Inscrypt 2024
+          </li><li>
+            ISC 2025
+          </li><li>
+            IWSEC 2016, 2017, 2018
+          </li><li>
+            LLE 2024
+          </li><li>
+            ProvSec 2016, 2017, 2018, 2019
+          </li><li>
+            SAC 2019, 2023, 2024, 2025
+          </li><li>
+            SECITC 2016, 2017
+          </li>
+        </ul>
+        <h3>Editorial Boards</h3>
+        <ul class="ul-list">
+          <li>
+            IET Information Security 2020-2023
+          </li><li>
+            TCHES 2018/19, 2019/20
+          </li><li>
+            ToSC 2016/17, 2017/18, 2018/19, 2019/20, 2023/24, 2024/25
+          </li><li>
+            ToSC special issue on NIST Lightweight Submissions 2020
+          </li>
+        </ul>
+        <h3>Grants and Prizes</h3>
+        <ul class="ul-list">
+          <li>
+            NWO Vidi 2023
+          </li><li>
+            Adviescommissie Outreach Beta 2021, 2022, 2023, 2024
+          </li><li>
+            Best Cybersecurity Master Thesis 2019, 2021, 2022, 2023, 2024
+          </li>
+        </ul>
+        <h3>Organization</h3>
+        <ul class="ul-list">
+          <li>
+            Co-organizer of <a href="https://bacc.cs.ru.nl">Applied Cryptography Course</a>, <i>Amsterdam</i> (April 2026)
+          </li><li>
+            Co-organizer of <a href="https://gelrecrypt.cs.ru.nl">GelreCrypt 2025</a>, <i>Nijmegen</i> (November 2025)
+          </li><li>
+            Co-organizer of <a href="https://bacc.cs.ru.nl">Applied Cryptography Course</a>, <i>Amsterdam</i> (March/April 2025)
+          </li><li>
+            Co-organizer of <a href="https://eoe.cs.ru.nl">End-of-ESCADA</a> workshop, <i>Nijmegen</i> (August 2024)
+          </li><li>
+            Co-organizer of Lorentz workshop <a href="https://www.lorentzcenter.nl/beating-real-time-crypto-solutions-and-analysis.html">Beating Real-Time Crypto: Solutions and Analysis</a>, <i>Leiden</i> (April 2024)
+          </li><li>
+            Co-organizer of Dagstuhl workshop <a href="https://www.dagstuhl.de/en/program/calendar/semhp/?semnr=24041">Symmetric Cryptography (Dagstuhl Seminar 24041)</a>, <i>Dagstuhl</i> (January 2024)
+          </li><li>
+            Program co-chair of <a href="https://isc23.cs.rug.nl">ISC 2023</a>, <i>Groningen</i> (November 2023)
+          </li><li>
+            Program co-chair of <a href="https://fse.iacr.org/2023/">FSE 2023</a>, <i>Beijing and Kobe</i> (March 2023)
+          </li><li>
+            Co-organizer of <a href="https://frisiacrypt2022.cs.ru.nl/">FrisiaCrypt 2022</a>, <i>Terschelling</i> (September 2022)
+          </li><li>
+            Co-organizer of Dagstuhl workshop <a href="https://www.dagstuhl.de/en/program/calendar/semhp/?semnr=22141">Symmetric Cryptography (Dagstuhl Seminar 22141)</a>, <i>Dagstuhl</i> (April 2022)
+          </li><li>
+            Program co-chair of <a href="https://fse.iacr.org/2022/">FSE 2022</a>, <i>Athens</i> (March 2022)
+          </li><li>
+            Co-organizer of Dagstuhl workshop <a href="https://www.dagstuhl.de/en/program/calendar/semhp/?semnr=20041">Symmetric Cryptography (Dagstuhl Seminar 20041)</a>, <i>Dagstuhl</i> (January 2020)
+          </li><li>
+            Co-organizer of Lorentz workshop <a href="https://www.lorentzcenter.nl/flexible-symmetric-cryptography.html">Flexible Symmetric Cryptography</a>, <i>Leiden</i> (March 2018)
+          </li><li>
+            Co-editor of <a href="http://www.nieuwarchief.nl/serie5/toonnummer.php?deel=18&nummer=3&taal=0">Wiskunde in de cryptografie</a> (September 2017)
+          </li>
+        </ul>
+        <h3>Teaching</h3>
+        <ul class="ul-list">
+          <li>
+            Lecturer <a href=https://courserepository.maastrichtuniversity.nl/p/module/EN/9503/BCS3230>Cryptography (BCS3230)</a>, <i>Maastricht University</i> (2025 - now)
+          </li><li>
+            (Co-)lecturer <a href=https://sis.ru.nl/osiris-student/OnderwijsCatalogusSelect.do?selectie=cursus&collegejaar=2021&cursus=NWI-IMC061>Applied Cryptography (NWI-IMC061)</a>, <i>Radboud University</i> (2022 - 2025)
+          </li><li>
+            (Co-)lecturer <font class="hlink">Selected Areas in Cryptology</font>, <i>MasterMath</i> (2020 - 2026)
+          </li><li>
+            (Co-)lecturer <a href=https://sis.ru.nl/osiris-student/OnderwijsCatalogusSelect.do?selectie=cursus&collegejaar=2021&cursus=NWI-IBC023>Introduction to Cryptography (NWI-IBC023)</a>, <i>Radboud University</i> (2021 - 2025)
+          </li><li>
+            (Co-)lecturer <a href=https://sis.ru.nl/osiris-student/OnderwijsCatalogusSelect.do?selectie=cursus&collegejaar=2021&cursus=NWI-IPC017>Matrix Calculation (NWI-IPC017)</a>, <i>Radboud University</i> (2019 - 2024)
+          </li><li>
+            (Co-)lecturer <a href=https://sis.ru.nl/osiris-student/OnderwijsCatalogusSelect.do?selectie=cursus&cursus=NWI-IBC016&collegejaar=2021>Combinatorics (NWI-IBC016)</a>, <i>Radboud University</i> (2019 - 2022)
+          </li><li>
+            Teaching assistant <a href=https://sis.ru.nl/osiris-student/OnderwijsCatalogusSelect.do?selectie=cursus&cursus=NWI-IPC021&collegejaar=2018>Security (NWI-IPC021)</a>, <i>Radboud University</i> (2017 - 2018)
+          </li><li>
+            Teaching assistant <a href=https://onderwijsaanbod.kuleuven.be/syllabi/v/e/H01A4AE.htm>Applied Algebra (H01A4A)</a>, <i>KU Leuven</i> (2009 - 2016)
+          </li>
+        </ul>
+        <h3>Postdocs</h3>
+        <ul class="ul-list">
+          <li>
+            <a href=https://www.cs.ru.nl/staff/Suprita.Talnikar>Suprita Talnikar</a>, Radboud University (2023 - 2025)
+          </li><li>
+            <a href=https://www.cs.ru.nl/staff/Shahram.Rasoolzadeh>Shahram Rasoolzadeh</a>, Radboud University (2021 - 2024)
+          </li>
+        </ul>
+        <h3>PhD Students</h3>
+        <ul class="ul-list">
+          <li>
+            Co-promotor <a href=https://www.cs.ru.nl/staff/Mario.Marhuenda.Beltran>Mario Marhuenda Beltrán</a>, Radboud University (2022 - now)
+          </li><li>
+            Co-promotor <a href=https://www.cs.ru.nl/staff/Jahandideh.Vahid>Vahid Jahandideh</a>, Radboud University (2022 - now)
+          </li><li>
+            Co-promotor <a href=https://www.cs.ru.nl/staff/Bouez.Alexandre>Alexandre Bouez</a>, Radboud University (2021 - now)
+          </li><li>
+            Co-promotor <a href=https://www.cs.ru.nl/staff/Charlotte.Lefevre>Charlotte Lefevre</a>, Radboud University (2021 - now)
+          </li><li>
+            Co-promotor <a href=https://www.cs.ru.nl/staff/aldo.gunsing>Aldo Gunsing</a>, Radboud University (2019 - 2024)
+          </li><li>
+            Co-promotor <a href=https://www.esat.kuleuven.be/cosic/people/yulong-chen/>Yu Long Chen</a>, KU Leuven (2017 - 2022)
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PhD -->
+    <section id="phd" aria-labelledby="phd-title">
+      <div class="container stack-lg">
+        <h2 id="phd-title">PhD</h2>
+        <h3><a href=pubs/13thesis.pdf>Provable Security of Cryptographic Hash Functions<br>(Bewijsbare veiligheid van cryptografische hashfuncties)</a></h3>
+        <p></p>
+        <h3>Jury</h3>
+        Prof. dr. ir. Pierre Verbaeten, chairman<br>
+        Prof. dr. ir. Bart Preneel, promotor<br>
+        Prof. dr. ir. Vincent Rijmen, promotor<br>
+        Prof. dr. Marc Fischlin (Darmstadt University of Technology, Germany)<br>
+        Prof. dr. ir. Frank Piessens<br>
+        Dr. ir. Martijn Stam (University of Bristol, UK)<br>
+        Prof. dr. ir. Joos Vandewalle
+        <p></p>
+        <h3>Date, Time, and Location</h3>
+        Tuesday May 7, 2013 at 13:30<br>
+        Auditorium Arenberg Castle<br>
+        Kasteelpark Arenberg 1<br>
+        3001 Heverlee, Belgium
+        <p></p>
+        <h3>Abstract</h3>
+        <p>Cryptographic hash functions form the basis of the security of today's digital environment, and find applications in numerous cryptographic systems such as tamper detection, key derivation functions, and digital signatures. Ideally, hash functions behave like a random oracle, a function that returns random outputs for each new input, but in practice such a construction does not exist. Usually, a hash function is designed to give strong confidence that it is indeed secure, and it is presumed secure until it is broken. In 2004-2005, cryptanalytic breakthroughs have raised doubts about the security of many widely employed hash functions, such as MD5 and SHA-1. As a response, in 2007 the US National Institute for Standards and Technology (NIST) announced a call for the design of a new SHA-3 hashing algorithm.<br><br>
+        This dissertation deals with the fundamental security properties of hash functions. It is divided into two parts.<br><br>
+        In the first part of the dissertation, we analyze existing hash functions and introduce design methodologies. We particularly search for the limits within the provable security framework, by considering minimalist designs with maximal security. Firstly, we look at double block length 3n-to-2n-bit compression functions based on block ciphers with an n-bit message and key space. We consider the MDC-4 hash function, and improve its collision and preimage security bounds. Next, we present a family of designs that make three cipher calls and achieve optimal collision security and very good preimage security. Furthermore, we consider the possibility of compression functions based on permutations, and provide a full security classification of all 2n-to-n-bit compression functions solely built of XOR operators and three permutations.<br><br>
+        As a final contribution of this part, we propose the family of parazoa functions as a generalization of the sponge hash function design, and prove that parazoa functions are indifferentiable from a random oracle. The sponge is a popular hash function design and many derivatives, called sponge-like functions, appeared in literature. However, these sponge-like functions do not automatically enjoy the same security guarantees as the original sponge. Our generalized parazoa family applies to a wide class of sponge-like functions, and the indifferentiability proof for parazoa naturally carries over.<br><br>
+        In the second part of the dissertation, we consider NIST's SHA-3 hash function competition from a provable security point of view. We provide a detailed survey of the five SHA-3 finalists, in which we analyze and compare their security guarantees. We consider collision, preimage, and second preimage resistance and indifferentiability of all finalists, and solve open problems where needed.</p>
+        <p></p>
+        <h3>Samenvatting</h3>
+        <p>Cryptografische hashfuncties liggen ten grondslag aan de beveiliging van de hedendaagse digitale wereld, en worden gebruikt in talrijke cryptografische toepassingen zoals het detecteren van ongeoorloofde datawijzigingen, het afleiden van cryptografische sleutels en digitale handtekeningen. In het ideale geval gedraagt een hashfunctie zich als een volledig willekeurige functionaliteit, een functie die voor iedere invoer een willekeurige uitvoer produceert, maar zulk soort functies bestaan in de praktijk niet. Derhalve worden hashfuncties normaliter op een zodanige wijze ontworpen dat ze veilig genoeg lijken, en ze worden veilig geacht totdat iemand een zwakheid in de functie ontdekt. In 2004-2005 hebben cryptanalytische doorbraken echter de veiligheid van enkele wijdverspreide hashfuncties, zoals MD5 en SHA-1, ter discussie gesteld. Om deze reden lanceerde het National Institute for Standards and Technology (NIST) van de VS in 2007 een internationale competitie voor het ontwerp van een nieuwe SHA-3 hashfunctie.<br><br>
+        Deze dissertatie behandelt fundamentele veiligheidsaspecten van cryptografische hashfuncties. Ze bestaat uit twee delen.<br><br>
+        In het eerste deel van de dissertatie analyseren we bestaande hashfuncties en introduceren we nieuwe ontwerpmethoden. In het bijzonder gaan we op zoek naar de limieten van het bewijsbareveiligheidskader, waarbij we minimalistische ontwerpen met maximale veiligheid bekijken. Als eerste onderzoeken we compressiefuncties van dubbele bloklengte: 3n-naar-2n-bit compressiefuncties gebaseerd op blokcijfers met een n-bit bericht- en sleutelgrootte. We beschouwen de MDC-4 hashfunctie en verbeteren haar botsings- en &#233;&#233;nwegsaanvalsbestendigheidsgrens. Vervolgens introduceren we een nieuwe familie van ontwerpen die drie cijferoproepen doen en die optimale botsingsbestendigheid en zeer goede &#233;&#233;nwegsaanvalsbestendigheid bereiken. Voorts analyseren we de mogelijkheid om compressiefuncties te construeren van permutaties, en verschaffen een volledige veiligheidsclassificatie van alle 2n-naar-n-bit compressiefuncties louter gebouwd op XOR-operators en drie permutaties.<br><br>
+        Als laatste bijdrage van dit deel van de dissertatie presenteren we de familie van parazoafuncties als een generalisatie van sponsfuncties, en bewijzen we dat parazoafuncties indifferentieerbaar zijn van een volledig willekeurige functionaliteit. De spons is een populair hashfunctieontwerp en tal van afgeleiden, zogenaamde sponsachtige functies, zijn in de loop der tijd gepubliceerd. Deze sponsachtige functies genieten echter niet automatisch dezelfde veiligheidsgaranties als de oorspronkelijke spons. Onze gegeneraliseerde parazoafamilie behelst een breed spectrum van sponsachtige functies, en het indifferentieerbaarheidsbewijs voor parazoa is overdraagbaar naar deze functies.<br><br>
+        In het tweede deel van de dissertatie beschouwen we NIST's SHA-3 hashfunctiecompetitie met betrekking tot haar bewijsbare veiligheid. We presenteren een gedetailleerde beschouwing van de vijf SHA-3-finalisten, waarin we hun veiligheidseigenschappen analyseren en vergelijken. We beschouwen botsings-, &#233;&#233;nwegsaanvals- en tweede-&#233;&#233;nwegsaanvalsbestendigheid, alsmede indifferentieerbaarheid van alle finalisten, en lossen waar nodig open problemen op.</p>
+        <p></p>
+        <h3>Samevatting</h3>
+        <p>Cryptografische hashfunkties ligke te gr&#243;ndjsjlaag aan de beveiliging van de hedendaagse digitale waereld, en waere gebro&#234;k in talrieke cryptografische toepassinge zo&#232;s het opsjpaore van onrechmaotige gegaevesverangeringe, het aafleije van cryptografische sjleutels en digitale handjteikeninge. In het ideale geval gedreug ein hashfunktie zich wie ein volledig willek&#228;&#246;rige funktionaliteit, ein funktie die veur jedere inveur ein willek&#228;&#246;rige oetveur produceert, m&#232;r zo ein funkties besjtaon in de praktijk neet. Daorom waere hashfunkties normaal gesjpraoke op ein zodanige maneer ontworpe dat ze veilig gen&#243;g lieke, en ze waere veilig besjouwd totdat emes ein zjwaakheid in de funktie ontd&#232;k. In 2004-2005 h&#246;bbe cryptanalytische doorbrake echter de veiligheid van versjillende wiedversjpreide hashfunkties, zo&#232;s MD5 en SHA-1, ter discussie gesjt&#232;ld. Om dees raeje lanceerde het National Institute for Standards and Technology (NIST) van de VS in 2007 ein internationale competitie veur het ontwerp van ein nuuje SHA-3 hashfunktie.<br><br>
+        Dees dissertatie behanjelt fundamentele veiligheidsaspecte van cryptografische hashfunkties. Ze besjteit oet twe&#235; deile.<br><br>
+        In het e&#235;sjte deil van de dissertatie analysere ver besjtaonde hashfunkties en introducere ver nuuje ontwerpmethodes. In het biezunjer gaon ver op zeuk nao de limiete van het bewiesbareveiligheidskader, wobie ver minimalistische ontwerpe mit maximale veiligheid bekieke. Es e&#235;sjte ongerzeuke ver kompressiefunkties van dubbele bloklengte: 3n-nao-2n-bit kompressiefunkties gebaseerd op bloksiefers mit ein n-bit berich- en sjleutelgroatte. Ver besjouwe de MDC-4 hashfunktie en verbaetere h&#228;&#246;r botsings- en einwaegsaanvalsbesjtendigheidsgrens. Vervolges introducere ver ein nuuje femielie van ontwerpe die drie sieferopreupe doon en die optimale botsingsbesjtendigheid en zeer gooje einwaegsaanvalsbesjtendigheid bereike. Wiejer analysere ver de m&#228;&#246;gelikheid om kompressiefunkties te construere van permutaties, en versjaffe ein volledige veiligheidsklassifikatie van alle 2n-nao-n-bit kompressiefunkties louter geboewd op XOR-operators en drie permutaties.<br><br>
+        Es l&#232;tste biedraag van dit deil van de dissertatie prizzentere ver de femielie van parazoafunkties es ein generalisatie van sjponsfunkties, en bewieze ver dat parazoafunkties indifferentieerbaar zeen van ein volledig willek&#228;&#246;rige funktionaliteit. De sjpons is ein populair hashfunktieontwerp en tal van aafgeleije, zogenaamde sjponsachtige funkties, zeen in de laup der tied gepubliceerd. Dees sjponsachtige funkties genete echter neet automatisch dezelfde veiligheidsgeranties es de oorsjpronkelikke sjpons. &#211;zze gegeneraliseerde parazoafemielie behels ein breid sjpectrum van sjponsachtige funkties, en het indifferentieerbaarheidsbewies veur parazoa is euverdraagbaar nao dees funkties.<br><br>
+        In het twe&#235;de deil van de dissertatie besjouwe ver NIST's SHA-3 hashfunktiecompetitie mit betr&#232;kking tot h&#228;&#246;r bewiesbare veiligheid. Ver presentere ein gedetailleerde besjouwing van de vief SHA-3-finaliste, wo-in ver hun veiligheidseigensjappe analysere en vergelieke. Ver besjouwe botsings-, einwaegsaanvals- en twe&#235;de-einwaegsaanvalsbesjtendigheid, es auch indifferentieerbaarheid van alle finaliste, en losse wo neudig aope probleme op.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container stack">
+      <small class="muted">Last modified: Sep 11, 2025</small>
+    </div>
+  </footer>
+
+  <script>
+    const sections = [...document.querySelectorAll('main section')];
+    const links = [...document.querySelectorAll('header nav a')];
+
+    const byId = id => links.find(a => a.getAttribute('href') === '#' + id);
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const link = byId(entry.target.id);
+        if (!link) return;
+        if (entry.isIntersecting) {
+          links.forEach(a => a.removeAttribute('aria-current'));
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+    }, { rootMargin: '-10% 0px -70% 0px', threshold: 0.01 });
+
+    sections.forEach(sec => obs.observe(sec));
+  </script>
+
+  <script src='fontawesome-all.js' id='fontawesome-js'></script>
+
+  <script async data-id="101449728" src="//static.getclicky.com/js"></script>
+
+</body>
 </html>
