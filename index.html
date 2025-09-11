@@ -63,7 +63,7 @@
         display: none; /* hide on mobile */
       }
     }
-    
+
     nav { display: flex; gap: 0.25rem; flex-wrap: wrap; align-items: center; }
     nav a {
       display: inline-block; padding: 0.5rem 0.7rem; border-radius: 999px;
@@ -1637,7 +1637,7 @@
     const byId = id => links.find(a => a.getAttribute('href') === '#' + id);
 
     const opts = window.matchMedia("(max-width: 768px)").matches
-      ? { rootMargin: "-10% 0px -80% 0px", threshold: 0.01 } // mobile
+      ? { rootMargin: "-10% 0px -90% 0px", threshold: 0.01 } // mobile
       : { rootMargin: "-10% 0px -70% 0px", threshold: 0.01 }; // desktop
 
     const obs = new IntersectionObserver((entries) => {
