@@ -52,7 +52,7 @@
       backdrop-filter: saturate(180%) blur(8px);
       background: color-mix(in hsl, var(--bg) 80%, transparent);
       border-bottom: 1px solid var(--border);
-      gap: 1.5rem;
+      gap: 2.5rem;
     }
     .brand {
       font-weight: 700; letter-spacing: 0.2px;
@@ -1618,7 +1618,7 @@
     const byId = id => links.find(a => a.getAttribute('href') === '#' + id);
 
     const opts = window.matchMedia("(max-width: 768px)").matches
-      ? { rootMargin: "-10% 0px -80% 0px", threshold: 0.01 } // mobile
+      ? { rootMargin: "-10% 0px -90% 0px", threshold: 0.01 } // mobile
       : { rootMargin: "-10% 0px -70% 0px", threshold: 0.01 }; // desktop
 
     const obs = new IntersectionObserver((entries) => {
